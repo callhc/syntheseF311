@@ -1,0 +1,10 @@
+TCOLORBOX
+    - convention
+    - definition
+    - proposition
+    - example
+    - proof
+    - remark 
+    - corollary
+    - lemma
+    - theorem

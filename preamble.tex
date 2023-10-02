@@ -1,0 +1,903 @@
+
+\input{packages} % Load packages
+
+
+\setlist{topsep=2pt,itemsep=2pt,parsep=0pt,partopsep=0pt} %change the format of lists
+\pgfplotsset{compat=newest} %use newest version of pgfplots
+\counterwithin{figure}{section} % Lier la numérotation des figures à la section
+
+
+\renewcommand*{\finalnamedelim}{\addcomma\addspace} % Forces authors' names to be separated by comma, instead of "and"
+
+\addbibresource{bibliography.bib} % Add bibliography file
+
+\newcommand{\remind}[1]{\textcolor{red}{\textbf{#1}}} % To remind me of unfinished work to fix later
+\newcommand{\hide}[1]{} % To hide large blocks of code without using % symbols
+
+% Same as \href, but the text appears in typewriter font and in a custom color
+\newcommand{\Href}[3][red!50!black]{\href{#2}{\textcolor{#1}{\texttt{#3}}}}
+
+\input{math}
+\input{letterfonts}
+
+
+\newtheoremstyle{mystyle}{}{}{}{}{\sffamily\bfseries}{:}{ }{}
+\makeatletter
+\renewenvironment{proof}[1][\proofname] {\par\pushQED{\qed}
+{\normalfont\sffamily\bfseries\topsep6\p@\@plus6\p@\relax #1\@addpunct{:} }}{\popQED\endtrivlist\@endpefalse}
+\makeatother
+\renewcommand{\qedsymbol}{\coolqed{0.32}} % Implements the new QED symbol
+\theoremstyle{mystyle}{\newtheorem*{remark}{Remarque}}
+\theoremstyle{mystyle}{\newtheorem*{remarks}{Remarques}}
+\theoremstyle{mystyle}{\newtheorem*{example}{Exemple}}
+\theoremstyle{mystyle}{\newtheorem*{examples}{Exemples}}
+\theoremstyle{definition}{\newtheorem*{exercise}{Exercice}}
+
+% Warning environment
+\newtheoremstyle{warn}{}{}{}{}{\normalfont}{}{ }{}
+\theoremstyle{warn}
+\newtheorem*{warning}{\warningsign{0.2}\relax}
+
+% Symbol for the warning environment, designed to be easily scalable
+\newcommand{\warningsign}[1]{
+    \tikz[scale=#1,every node/.style={transform shape}]{
+        \draw[-,line width={#1*0.8mm},red,fill=yellow,rounded corners={#1*2.5mm}] (0,0)--(1,{-sqrt(3)})--(-1,{-sqrt(3)})--cycle;
+        \node at (0,-1) {\fontsize{48}{60}\selectfont\bfseries!};
+}}
+
+\newcommand{\coolqed}[1]{\includegraphics[width=#1cm]{sunglasses_emoji.png}} % QED symbol
+
+% verbbox environment, for showing verbatim text next to code output (for package documentation and user learning purposes)
+\NewTCBListing{verbbox}{ !O{} }{boxrule=1pt,sidebyside,skin=bicolor,colback=gray!10,colbacklower=white,valign=center,top=2pt,bottom=2pt,left=2pt,right=2pt,#1} % Last argument allows more tcolorbox options to be added
+
+\NewDocumentCommand{\solidball}{ s O{} m O{white} m }{
+\tikz[scale=#5,every node/.style={transform shape}]{
+    \shade[ball color=#3] (0,0) circle (0.5); %solid ball with no label
+    \IfBooleanF{#1}{
+        \clip (0,0) circle (0.25);
+        \shade[ball color=#4] (0,0) circle (0.5);
+    }
+    \node[font=\sffamily\bfseries\selectfont] at (0,0) {#2}; % Label
+}
+}
+
+\NewDocumentCommand{\stripedball}{ s O{} m O{white} m }{
+\tikz[scale=#5,every node/.style={transform shape}]{
+    \shade[ball color=#4] (0,0) circle (0.5);
+    \clip (-0.5,-0.35) rectangle (0.5,0.35);
+    \shade[ball color=#3] (0,0) circle (0.5);
+    \IfBooleanF{#1}{
+        \clip (0,0) circle (0.25);
+        \shade[ball color=#4] (0,0) circle (0.5);
+    }
+    \node[font=\sffamily\bfseries\selectfont] at (0,0) {#2}; % Label
+}
+}
+
+% Official colors for Aramith Tournament pool balls
+% Colors taken from https://www.aramith.com/story-behind-aramith-tournament-black-colours
+\definecolor{aramith_color_0}{HTML}{FFFFDF} % Cue ball and secondary color for all balls
+\definecolor{aramith_color_1}{HTML}{FFD501} % 1 and 9
+\definecolor{aramith_color_2}{HTML}{013CB1} % 2 and 10
+\definecolor{aramith_color_3}{HTML}{E71C01} % 3 and 11
+\definecolor{aramith_color_4}{HTML}{4F029C} % 4 and 12
+\definecolor{aramith_color_5}{HTML}{FA4D00} % 5 and 13
+\definecolor{aramith_color_6}{HTML}{0E5D01} % 6 and 14
+\definecolor{aramith_color_7}{HTML}{6D071A} % 7 and 15
+\definecolor{aramith_color_8}{HTML}{000000} % 8 (black)
+
+
+\makeatletter
+% Adapted from https://tex.stackexchange.com/a/61600
+\csdef{aramith_pool_ball@0}#1{\solidball*{aramith_color_0}{#1}}                         % Cue ball
+\csdef{aramith_pool_ball@1}#1{\solidball[1]{aramith_color_1}[aramith_color_0]{#1}}      % Ball 1
+\csdef{aramith_pool_ball@2}#1{\solidball[2]{aramith_color_2}[aramith_color_0]{#1}}      % Ball 2
+\csdef{aramith_pool_ball@3}#1{\solidball[3]{aramith_color_3}[aramith_color_0]{#1}}      % Ball 3
+\csdef{aramith_pool_ball@4}#1{\solidball[4]{aramith_color_4}[aramith_color_0]{#1}}      % Ball 4
+\csdef{aramith_pool_ball@5}#1{\solidball[5]{aramith_color_5}[aramith_color_0]{#1}}      % Ball 5
+\csdef{aramith_pool_ball@6}#1{\solidball[6]{aramith_color_6}[aramith_color_0]{#1}}      % Ball 6
+\csdef{aramith_pool_ball@7}#1{\solidball[7]{aramith_color_7}[aramith_color_0]{#1}}      % Ball 7
+\csdef{aramith_pool_ball@8}#1{\solidball[8]{aramith_color_8}[aramith_color_0]{#1}}      % Ball 8 (black)
+\csdef{aramith_pool_ball@9}#1{\stripedball[9]{aramith_color_1}[aramith_color_0]{#1}}    % Ball 9
+\csdef{aramith_pool_ball@10}#1{\stripedball[10]{aramith_color_2}[aramith_color_0]{#1}}  % Ball 10
+\csdef{aramith_pool_ball@11}#1{\stripedball[11]{aramith_color_3}[aramith_color_0]{#1}}  % Ball 11
+\csdef{aramith_pool_ball@12}#1{\stripedball[12]{aramith_color_4}[aramith_color_0]{#1}}  % Ball 12
+\csdef{aramith_pool_ball@13}#1{\stripedball[13]{aramith_color_5}[aramith_color_0]{#1}}  % Ball 13
+\csdef{aramith_pool_ball@14}#1{\stripedball[14]{aramith_color_6}[aramith_color_0]{#1}}  % Ball 14
+\csdef{aramith_pool_ball@15}#1{\stripedball[15]{aramith_color_7}[aramith_color_0]{#1}}  % Ball 15
+\NewDocumentCommand{\poolball}{ o m m }{
+    \pgfmathparse{Mod(#2,16)} % Argument #2 mod 16  as a floating-point number, e.g. 4.0
+    \pgfmathtruncatemacro{\argumentmodulosixteen}{\pgfmathresult} % Convert to integer, e.g. 4.0 to 4
+    \ifnum\argumentmodulosixteen=0
+        \solidball*{aramith_color_0}{#3}
+    \else
+        \ifnum\argumentmodulosixteen<9
+            \solidball[\IfNoValueTF{#1}{#2}{#1}]{aramith_color_\argumentmodulosixteen}[aramith_color_0]{#3} % Solid ball of the appropriate color, and the appropriate number (if the optional argument is not specified), otherwise the optional argument
+        \else
+            \pgfmathparse{\argumentmodulosixteen-8} % Argument #2 mod 8  as a floating-point number, e.g. 3.0 (this will only be computed if #2≥9)
+            \pgfmathtruncatemacro{\argumentmoduloeight}{\pgfmathresult} % Convert to integer, e.g. 3.0 to 3
+            \stripedball[\IfNoValueTF{#1}{#2}{#1}]{aramith_color_\argumentmoduloeight}[aramith_color_0]{#3} % Striped ball of the appropriate color, and the appropriate number (if the optional argument is not specified), otherwise the optional argument
+        \fi
+    \fi}
+\makeatother
+
+\makeatletter
+% \fsize stores the current font size but is expandable (and can be called later without using \makeatletter and \makeatother)
+\def\fsize{\dimexpr\f@size pt\relax}
+\makeatother
+
+\makeatletter
+% Adapted from https://tex.stackexchange.com/a/19700
+\def\my@vector #1,#2\@eolst{
+    \ifx\relax#2\relax
+        #1
+    \else
+        #1\my@delim
+        \my@vector #2\@eolst
+    \fi}
+\newcommand\vcstring[2][\\]{% Converts comma-separated string to #1-separated string
+    \def\my@delim{#1}
+        \my@vector #2,\relax\noexpand\@eolst}
+\newcommand\cvc[2][p]{% Converts comma-separated string to column vector, optional argument defines matrix brackets
+    \def\my@delim{\\}
+        \begin{#1matrix} % Empty argument also possible
+            \my@vector #2,\relax\noexpand\@eolst
+        \end{#1matrix}}
+\newcommand\rvc[2][p]{% Converts comma-separated string to row vector, optional argument defines matrix brackets
+    \def\my@delim{&}
+        \begin{#1matrix} % Empty argument also possible
+            \my@vector #2,\relax\noexpand\@eolst
+        \end{#1matrix}}
+% Matrix environment with variable number of arguments. Adapted from https://davidyat.es/2016/07/27/writing-a-latex-macro-that-takes-a-variable-number-of-arguments/
+\newcommand{\mat}[2][p]{
+    \def\matrixenvironment{#1matrix} % Specifying the matrix brackets, this has to be done beforehand as '#1' changes under \passtonextarg
+    \def\my@delim{&}
+        \begin{\matrixenvironment} % Begin matrix environment
+            \my@vector #2,\relax\noexpand\@eolst
+            \@ifnextchar\bgroup{\passtonextarg}{\end{\matrixenvironment}}% % Pass to next argument (if any), otherwise end matrix environment
+}
+\newcommand{\passtonextarg}[1]{\\ \my@vector #1,\relax\noexpand\@eolst
+    \@ifnextchar\bgroup{\passtonextarg}{\end{\matrixenvironment}}% Passing to next argument
+}
+\makeatother
+
+\definecolor{tcol_DEF}{HTML}{E40125} % Color for Definition
+\definecolor{tcol_PRP}{HTML}{EB8407} % Color for Proposition
+\definecolor{tcol_LEM}{HTML}{05C4D9} % Color for Lemma
+\definecolor{tcol_THM}{HTML}{1346E4} % Color for Theorem
+\definecolor{tcol_COR}{HTML}{7904C2} % Color for Corollary
+\definecolor{tcol_REM}{HTML}{18B640} % Color for Remark
+\definecolor{tcol_PRF}{HTML}{5A76B2} % Color for Proof
+\definecolor{tcol_EXA}{HTML}{21340A} % Color for Example
+\definecolor{tcol_CNT1}{HTML}{72E094} % First color for Contents
+\definecolor{tcol_CNT2}{HTML}{24E2D6} % Second color for Contents
+\definecolor{tcol_CNV1}{HTML}{AF7AC5} % First color for Conventions
+\definecolor{tcol_CNV2}{HTML}{C3B1E1} % First color for Conventions
+
+\tcbset{
+tbox_DEF_style/.style={enhanced jigsaw,
+    colback=tcol_DEF!10,colframe=tcol_DEF!80!black,,
+    fonttitle=\sffamily\bfseries,
+    separator sign=.,label separator={},
+    sharp corners,top=2pt,bottom=2pt,left=2pt,right=2pt,
+    before skip=10pt,after skip=10pt,breakable,
+},
+tbox_PRP_style/.style={enhanced jigsaw,
+    colback=tcol_PRP!10,colframe=tcol_PRP!80!black,
+    fonttitle=\sffamily\bfseries,
+    attach boxed title to top left={yshift=-\tcboxedtitleheight},
+    boxed title style={
+        boxrule=0pt,boxsep=2.5pt,
+        colback=tcol_PRP!80!black,colframe=tcol_PRP!80!black,
+        sharp corners=uphill
+    },
+    separator sign=.,label separator={},
+    top=\tcboxedtitleheight,bottom=2pt,left=2pt,right=2pt,
+    before skip=10pt,after skip=10pt,drop fuzzy shadow,breakable
+},
+tbox_THM_style/.style={enhanced jigsaw,
+    colback=tcol_THM!10,colframe=tcol_THM!80!black,
+    fonttitle=\sffamily\bfseries,coltitle=black,
+    attach boxed title to top left={xshift=10pt,yshift=-\tcboxedtitleheight/2},
+    boxed title style={
+        colback=tcol_THM!10,colframe=tcol_THM!80!black,height=16pt,bean arc
+    },
+    separator sign=.,label separator={},
+    sharp corners,top=6pt,bottom=2pt,left=2pt,right=2pt,
+    before skip=10pt,after skip=10pt,breakable
+},
+tbox_LEM_style/.style={enhanced jigsaw,
+    colback=tcol_LEM!10,colframe=tcol_LEM!80!black,
+    boxrule=0pt,
+    fonttitle=\sffamily\bfseries,
+    attach boxed title to top left={yshift=-\tcboxedtitleheight},
+    boxed title style={
+        boxrule=0pt,boxsep=2pt,
+        colback=tcol_LEM!80!black,colframe=tcol_LEM!80!black,
+        interior code={\fill[tcol_LEM!80!black] (interior.north west)--(interior.south west)--([xshift=-2mm]interior.south east)--([xshift=2mm]interior.north east)--cycle;
+    }},
+    separator sign=.,label separator={},
+    frame hidden,borderline north={1pt}{0pt}{tcol_LEM!80!black},
+    before upper={\hspace{\tcboxedtitlewidth}},
+    sharp corners,top=2pt,bottom=2pt,left=5pt,right=5pt,
+    before skip=10pt,after skip=10pt,breakable
+},
+tbox_COR_style/.style={enhanced jigsaw,
+    colback=tcol_COR!10,colframe=tcol_COR!80!black,
+    boxrule=0pt,
+    fonttitle=\sffamily\bfseries,coltitle=black,
+    separator sign={},label separator={},
+    description font=\normalfont\sffamily,
+    description delimiters={(}{)},
+    attach title to upper,after title={:\ },
+    frame hidden,borderline west={2pt}{0pt}{tcol_COR},
+    sharp corners,top=2pt,bottom=2pt,left=5pt,right=5pt,
+    before skip=10pt,after skip=10pt,breakable
+},
+}
+
+\newtcbtheorem[number within=section,
+    crefname={\color{tcol_DEF!50!black} définition}{\color{tcol_DEF!50!black} définitions},
+    Crefname={\color{tcol_DEF!50!black} Définition}{\color{tcol_DEF!50!black} Définitions}
+    ]{definition}{Définition}{tbox_DEF_style}{}
+\newtcbtheorem[number within=section,
+% \newtcbtheorem[use counter from=definition,
+    crefname={\color{tcol_PRP!50!black} proposition}{\color{tcol_PRP!50!black} propositions},
+    Crefname={\color{tcol_PRP!50!black} Proposition}{\color{tcol_PRP!50!black} Propositions}
+    ]{proposition}{Proposition}{tbox_PRP_style}{}
+% \newtcbtheorem[use counter from=definition,
+\newtcbtheorem[number within=section,
+    crefname={\color{tcol_THM!50!black} théorème}{\color{tcol_THM!50!black} théorèmes},
+    Crefname={\color{tcol_THM!50!black} Théorème}{\color{tcol_THM!50!black} Théorèmes}
+    ]{theorem}{Théorème}{tbox_THM_style}{}
+\newtcbtheorem[number within=section,
+% \newtcbtheorem[use counter from=definition,
+    crefname={\color{tcol_LEM!50!black} lemme}{\color{tcol_LEM!50!black} lemmes},
+    Crefname={\color{tcol_LEM!50!black} Lemme}{\color{tcol_LEM!50!black} Lemmes}
+    ]{lemma}{Lemme}{tbox_LEM_style}{}
+\newtcbtheorem[number within=section,
+% \newtcbtheorem[use counter from=definition,
+    crefname={\color{tcol_COR!50!black} corollaire}{\color{tcol_COR!50!black} corollaires},
+    Crefname={\color{tcol_COR!50!black} Corollaire}{\color{tcol_COR!50!black} Corollaires}
+    ]{corollary}{Corollaire}{tbox_COR_style}{}
+
+\makeatletter
+\@namedef{tcolorboxshape@filingbox@ul}#1#2#3{
+    (frame.south west)--(title.north west)--([xshift=-\dimexpr#1\relax]title.north east) to[out=0,in=180] ([xshift=\dimexpr#2\relax,yshift=\dimexpr#3\relax]title.south east)--(frame.north east)--(frame.south east)--cycle
+}
+\@namedef{tcolorboxshape@filingbox@uc}#1#2#3{
+    (frame.south west)--(frame.north west)--([xshift=-\dimexpr#2\relax,yshift=\dimexpr#3\relax]title.south west) to[out=0,in=180] ([xshift=\dimexpr#1\relax]title.north west)--([xshift=-\dimexpr#1\relax]title.north east) to[out=0,in=180] ([xshift=\dimexpr#2\relax,yshift=\dimexpr#3\relax]title.south east)--(frame.north east)--(frame.south east)--cycle
+}
+\@namedef{tcolorboxshape@filingbox@ur}#1#2#3{
+    (frame.south east)--(title.north east)--([xshift=\dimexpr#1\relax]title.north west) to[out=180,in=0] ([xshift=-\dimexpr#2\relax,yshift=\dimexpr#3\relax]title.south west)--(frame.north west)--(frame.south west)--cycle
+}
+\@namedef{tcolorboxshape@filingbox@dl}#1#2#3{
+    (frame.north west)--(title.south west)--([xshift=-\dimexpr#1\relax]title.south east) to[out=0,in=180] ([xshift=\dimexpr#2\relax,yshift=-\dimexpr#3\relax]title.north east)--(frame.south east)--(frame.north east)--cycle
+}
+\@namedef{tcolorboxshape@filingbox@dc}#1#2#3{
+    (frame.north west)--(frame.south west)--([xshift=-\dimexpr#2\relax,yshift=-\dimexpr#3\relax]title.north west) to[out=0,in=180] ([xshift=\dimexpr#1\relax]title.south west)--([xshift=-\dimexpr#1\relax]title.south east) to[out=0,in=180] ([xshift=\dimexpr#2\relax,yshift=-\dimexpr#3\relax]title.north east)--(frame.south east)--(frame.north east)--cycle
+}
+\@namedef{tcolorboxshape@filingbox@dr}#1#2#3{
+    (frame.north east)--(title.south east)--([xshift=\dimexpr#1\relax]title.south west) to[out=180,in=0] ([xshift=-\dimexpr#2\relax,yshift=-\dimexpr#3\relax]title.north west)--(frame.south west)--(frame.north west)--cycle
+}
+\@namedef{tcolorboxshape@railingbox@ul}#1#2#3{
+    (frame.south west)--(title.north west)--([xshift=-\dimexpr#1\relax]title.north east)--([xshift=\dimexpr#2\relax,yshift=\dimexpr#3\relax]title.south east)--(frame.north east)--(frame.south east)--cycle
+}
+\@namedef{tcolorboxshape@railingbox@uc}#1#2#3{
+    (frame.south west)--(frame.north west)--([xshift=-\dimexpr#2\relax,yshift=\dimexpr#3\relax]title.south west)--([xshift=\dimexpr#1\relax]title.north west)--([xshift=-\dimexpr#1\relax]title.north east)--([xshift=\dimexpr#2\relax,yshift=\dimexpr#3\relax]title.south east)--(frame.north east)--(frame.south east)--cycle
+}
+\@namedef{tcolorboxshape@railingbox@ur}#1#2#3{
+    (frame.south east)--(title.north east)--([xshift=\dimexpr#1\relax]title.north west)--([xshift=-\dimexpr#2\relax,yshift=\dimexpr#3\relax]title.south west)--(frame.north west)--(frame.south west)--cycle
+}
+\@namedef{tcolorboxshape@railingbox@dl}#1#2#3{
+    (frame.north west)--(title.south west)--([xshift=-\dimexpr#1\relax]title.south east)--([xshift=\dimexpr#2\relax,yshift=-\dimexpr#3\relax]title.north east)--(frame.south east)--(frame.north east)--cycle
+}
+\@namedef{tcolorboxshape@railingbox@dc}#1#2#3{
+    (frame.north west)--(frame.south west)--([xshift=-\dimexpr#2\relax,yshift=-\dimexpr#3\relax]title.north west)--([xshift=\dimexpr#1\relax]title.south west)--([xshift=-\dimexpr#1\relax]title.south east)--([xshift=\dimexpr#2\relax,yshift=-\dimexpr#3\relax]title.north east)--(frame.south east)--(frame.north east)--cycle
+}
+\@namedef{tcolorboxshape@railingbox@dr}#1#2#3{
+    (frame.north east)--(title.south east)--([xshift=\dimexpr#1\relax]title.south west)--([xshift=-\dimexpr#2\relax,yshift=-\dimexpr#3\relax]title.north west)--(frame.south west)--(frame.north west)--cycle
+}
+\newcommand{\TColorBoxShape}[2]{\expandafter\ifx\csname tcolorboxshape@#1@#2\endcsname\relax
+\expandafter\@gobble\else
+\csname tcolorboxshape@#1@#2\expandafter\endcsname
+\fi}
+\makeatother
+
+\tcbset{ % Styles for filingbox, railingbox and flagbox environments
+% Adapted from https://tex.stackexchange.com/questions/587912/tcolorbox-custom-title-box-style
+filingstyle/ul/.style 2 args={
+    attach boxed title to top left={yshift=-2mm},
+    boxed title style={empty,top=0mm,bottom=1mm,left=1mm,right=0mm},
+    interior code={
+        \path[fill=#1,rounded corners] \TColorBoxShape{filingbox}{ul}{9pt}{18pt}{6pt};
+    },
+    frame code={
+        \path[draw=#2,line width=0.5mm,rounded corners] \TColorBoxShape{filingbox}{ul}{9pt}{18pt}{6pt};
+    }},
+filingstyle/uc/.style 2 args={
+    attach boxed title to top center={yshift=-2mm},
+    boxed title style={empty,top=0mm,bottom=1mm,left=0mm,right=0mm},
+    interior code={
+        \path[fill=#1,rounded corners] \TColorBoxShape{filingbox}{uc}{9pt}{18pt}{6pt};
+    },
+    frame code={
+        \path[draw=#2,line width=0.5mm,rounded corners] \TColorBoxShape{filingbox}{uc}{9pt}{18pt}{6pt};
+    }},
+filingstyle/ur/.style 2 args={
+    attach boxed title to top right={yshift=-2mm},
+    boxed title style={empty,top=0mm,bottom=1mm,left=0mm,right=1mm},
+    interior code={
+        \path[fill=#1,rounded corners] \TColorBoxShape{filingbox}{ur}{9pt}{18pt}{6pt};
+    },
+    frame code={
+        \path[draw=#2,line width=0.5mm,rounded corners] \TColorBoxShape{filingbox}{ur}{9pt}{18pt}{6pt};
+    }},
+filingstyle/dl/.style 2 args={
+    attach boxed title to bottom left={yshift=2mm},
+    boxed title style={empty,top=1mm,bottom=0mm,left=1mm,right=0mm},
+    interior code={
+        \path[fill=#1,rounded corners] \TColorBoxShape{filingbox}{dl}{9pt}{18pt}{6pt};
+    },
+    frame code={
+        \path[draw=#2,line width=0.5mm,rounded corners] \TColorBoxShape{filingbox}{dl}{9pt}{18pt}{6pt};
+    }},
+filingstyle/dc/.style 2 args={
+    attach boxed title to bottom center={yshift=2mm},
+    boxed title style={empty,top=1mm,bottom=0mm,left=0mm,right=0mm},
+    interior code={
+        \path[fill=#1,rounded corners] \TColorBoxShape{filingbox}{dc}{9pt}{18pt}{6pt};
+    },
+    frame code={
+        \path[draw=#2,line width=0.5mm,rounded corners] \TColorBoxShape{filingbox}{dc}{9pt}{18pt}{6pt};
+    }},
+filingstyle/dr/.style 2 args={
+    attach boxed title to bottom right={yshift=2mm},
+    boxed title style={empty,top=1mm,bottom=0mm,left=0mm,right=1mm},
+    interior code={
+        \path[fill=#1,rounded corners] \TColorBoxShape{filingbox}{dr}{9pt}{18pt}{6pt};
+    },
+    frame code={
+        \path[draw=#2,line width=0.5mm,rounded corners] \TColorBoxShape{filingbox}{dr}{9pt}{18pt}{6pt};
+    }},
+railingstyle/ul/.style 2 args={
+    attach boxed title to top left={yshift=-2mm},
+    boxed title style={empty,top=0mm,bottom=1mm,left=1mm,right=0mm},
+    interior code={
+        \path[fill=#1] \TColorBoxShape{railingbox}{ul}{3pt}{12pt}{6pt};
+    },
+    frame code={
+        \path[draw=#2,line width=0.5mm] \TColorBoxShape{railingbox}{ul}{3pt}{12pt}{6pt};
+    }},
+railingstyle/uc/.style 2 args={
+    attach boxed title to top center={yshift=-2mm},
+    boxed title style={empty,top=0mm,bottom=1mm,left=0mm,right=0mm},
+    interior code={
+        \path[fill=#1] \TColorBoxShape{railingbox}{uc}{3pt}{12pt}{6pt};
+    },
+    frame code={
+        \path[draw=#2,line width=0.5mm] \TColorBoxShape{railingbox}{uc}{3pt}{12pt}{6pt};
+    }},
+railingstyle/ur/.style 2 args={
+    attach boxed title to top right={yshift=-2mm},
+    boxed title style={empty,top=0mm,bottom=1mm,left=0mm,right=1mm},
+    interior code={
+        \path[fill=#1] \TColorBoxShape{railingbox}{ur}{3pt}{12pt}{6pt};
+    },
+    frame code={
+        \path[draw=#2,line width=0.5mm] \TColorBoxShape{railingbox}{ur}{3pt}{12pt}{6pt};
+    }},
+railingstyle/dl/.style 2 args={
+    attach boxed title to bottom left={yshift=2mm},
+    boxed title style={empty,top=1mm,bottom=0mm,left=1mm,right=0mm},
+    interior code={
+        \path[fill=#1] \TColorBoxShape{railingbox}{dl}{3pt}{12pt}{6pt};
+    },
+    frame code={
+        \path[draw=#2,line width=0.5mm] \TColorBoxShape{railingbox}{dl}{3pt}{12pt}{6pt};
+    }},
+railingstyle/dc/.style 2 args={
+    attach boxed title to bottom center={yshift=2mm},
+    boxed title style={empty,top=1mm,bottom=0mm,left=0mm,right=0mm},
+    interior code={
+        \path[fill=#1] \TColorBoxShape{railingbox}{dc}{3pt}{12pt}{6pt};
+    },
+    frame code={
+        \path[draw=#2,line width=0.5mm] \TColorBoxShape{railingbox}{dc}{3pt}{12pt}{6pt};
+    }},
+railingstyle/dr/.style 2 args={
+    attach boxed title to bottom right={yshift=2mm},
+    boxed title style={empty,top=1mm,bottom=0mm,left=0mm,right=1mm},
+    interior code={
+        \path[fill=#1] \TColorBoxShape{railingbox}{dr}{3pt}{12pt}{6pt};
+    },
+    frame code={
+        \path[draw=#2,line width=0.5mm] \TColorBoxShape{railingbox}{dr}{3pt}{12pt}{6pt};
+    }},
+flagstyle/ul/.style 2 args={
+    interior hidden,frame hidden,colbacktitle=#1,
+    borderline west={1pt}{0pt}{#2},
+    attach boxed title to top left={yshift=-8pt,yshifttext=-8pt},
+    boxed title style={boxsep=3pt,boxrule=1pt,colframe=#2,sharp corners,left=4pt,right=4pt},
+    bottom=0mm
+    },
+flagstyle/ur/.style 2 args={
+    interior hidden,frame hidden,colbacktitle=#1,
+    borderline east={1pt}{0pt}{#2},
+    attach boxed title to top right={yshift=-8pt,yshifttext=-8pt},
+    boxed title style={boxsep=3pt,boxrule=1pt,colframe=#2,sharp corners,left=4pt,right=4pt},
+    bottom=0mm
+    },
+flagstyle/dl/.style 2 args={
+    interior hidden,frame hidden,colbacktitle=#1,
+    borderline west={1pt}{0pt}{#2},
+    attach boxed title to bottom left={yshift=8pt,yshifttext=8pt},
+    boxed title style={boxsep=3pt,boxrule=1pt,colframe=#2,sharp corners,left=4pt,right=4pt},
+    top=0mm
+    },
+flagstyle/dr/.style 2 args={
+    interior hidden,frame hidden,colbacktitle=#1,
+    borderline east={1pt}{0pt}{#2},
+    attach boxed title to bottom right={yshift=8pt,yshifttext=8pt},
+    boxed title style={boxsep=3pt,boxrule=1pt,colframe=#2,sharp corners,left=4pt,right=4pt},
+    top=0mm
+    }
+}
+
+% Box in the shape of a filing divider, position of tab can be ul (up left), uc (up center), ur (up right), dl (down left), dc (down center) or dr (down right). Default is ul (upper left)
+\NewTColorBox{filingbox}{ D(){ul} O{black} m O{} }{enhanced,
+    top=1mm,bottom=1mm,left=1mm,right=1mm,
+    title={#3},
+    fonttitle=\sffamily\bfseries,
+    coltitle=black,
+    filingstyle/#1={#2!10}{#2},
+    #4
+}
+
+% Box in the shape of a railing bar, position of tab can be ul (up left), uc (up center), ur (up right), dl (down left), dc (down center) or dr (down right). Default is ul (upper left)
+\NewTColorBox{railingbox}{ D(){ul} O{black} m O{} }{enhanced,
+    top=1mm,bottom=1mm,left=1mm,right=1mm,
+    title={#3},
+    fonttitle=\sffamily\bfseries,
+    coltitle=black,
+    railingstyle/#1={#2!10}{#2},
+    #4
+}
+
+% Box in the shape of a flag, position of tab can be ul (up left), ur (up right), dl (down left) or dr (down right). Default is ul (upper left)
+\NewTColorBox{flagbox}{ D(){ul} O{black} m O{} }{enhanced,breakable,
+    top=1mm,bottom=1mm,left=1mm,right=1mm,
+    title={#3},
+    fonttitle=\sffamily\bfseries,
+    coltitle=black,
+    flagstyle/#1={#2!10}{#2},
+    #4
+}
+
+\makeatletter
+\newcommand*{\CreateSmartLargeOperator}[2]{
+% Adapted from https://tex.stackexchange.com/questions/61598/new-command-with-cases-conditionals-if-thens/61600
+    % Plain operator (no customization)
+    \csdef{LargeOperator@#1@}{\csdef{LargeOperator@#1@Symbol}{\csuse{#1}}}
+    % Operator with limits above and below symbol
+    \csdef{LargeOperator@#1@l}{\csdef{LargeOperator@#1@Symbol}{\csuse{#1}\limits}}
+    % Operato with limits beside symbol
+    \csdef{LargeOperator@#1@n}{\csdef{LargeOperator@#1@Symbol}{\csuse{#1}\nolimits}}
+    % Inline style operator
+    \csdef{LargeOperator@#1@i}{\csdef{LargeOperator@#1@Symbol}{\textstyle\csuse{#1}}}
+    % Display style operator
+    \csdef{LargeOperator@#1@d}{\csdef{LargeOperator@#1@Symbol}{\displaystyle\csuse{#1}}}
+    % Inline style operator with limits above and below symbol
+    \csdef{LargeOperator@#1@il}{\csdef{LargeOperator@#1@Symbol}{\textstyle\csuse{#1}\limits}}
+    % Inline style operator with limits beside symbol
+    \csdef{LargeOperator@#1@in}{\csdef{LargeOperator@#1@Symbol}{\textstyle\csuse{#1}\nolimits}}
+    % Display style operator with limits above and below symbol
+    \csdef{LargeOperator@#1@dl}{\csdef{LargeOperator@#1@Symbol}{\displaystyle\csuse{#1}\limits}}
+    % Display style operator with limits beside symbol
+    \csdef{LargeOperator@#1@dn}{\csdef{LargeOperator@#1@Symbol}{\displaystyle\csuse{#1}\nolimits}}
+
+% NOTE: In the command below, ##1 denotes the operator. It is NOT to be used as an argument!
+\def\LargeOperatorSpecs@i##1,##2,##3,##4,##5,##6,##7\@nil{
+% If no arguments, operate over n from 1 to infinity
+    \ifx$##2$\csuse{LargeOperator@##1@Symbol}_{n=1}^{\infty}\else
+    % If one argument, operate over n from ##2 to infinity
+        \ifx$##3$\csuse{LargeOperator@##1@Symbol}_{n=##2}^{\infty}\else
+        % If two arguments, operate over n from ##2 to ##3
+            \ifx$##4$\csuse{LargeOperator@##1@Symbol}_{n=##2}^{##3}\else
+            % If three arguments, operate over ##2 from ##3 to ##4
+                \ifx$##5$\csuse{LargeOperator@##1@Symbol}_{##2=##3}^{##4}\else
+                % If four arguments, operate over ##2 and ##3 from ##4 to ##5
+                    \ifx$##6$\csuse{LargeOperator@##1@Symbol}_{##2,##3=##4}^{##5}\else
+                    % If five arguments, operate over ##2, ##3 and ##4 from ##5 to ##6
+                        \csuse{LargeOperator@##1@Symbol}_{##2,##3,##4=##5}^{##6}
+                    \fi
+                \fi
+            \fi
+        \fi
+    \fi
+}
+
+% Flexible "smart" large operator macro with comma-separated arguments and optional argument for formatting. Default is over n from 1 to infinity. Adapted from https://tex.stackexchange.com/a/15722
+\expandafter\DeclareDocumentCommand\csname#2\endcsname{ O{} m }{ % New operator macro
+\bgroup % Group created to keep operator style (e.g. \limits) local
+    \expandafter\ifx\csname LargeOperator@#1@##1\endcsname\relax
+    \expandafter\@gobble\else
+    \csname LargeOperator@#1@##1\expandafter\endcsname
+    \fi
+    \expandafter\LargeOperatorSpecs@i#1,##2,,,,,\@nil% % #1 stands in for the first "argument" of \LargeOperatorSpecs@i (the operator), the actual arguments are from ##2 onward
+\egroup}
+}
+\makeatother
+
+% Create the smart large operator #2 based on the large operator #1. For example, \CreateSmartLargeOperator{sum}{Sum} will define \Sum as the smart large operator based on \sum
+% Equivalent Unicode characters are given here (but they are NOT the same as the operators)
+\CreateSmartLargeOperator{sum}{Sum}             % Large: U+2211 ∑ (no small version)
+\CreateSmartLargeOperator{prod}{Prod}           % Small: U+2293 ⊓, Large: U+220F ∏
+\CreateSmartLargeOperator{coprod}{Coprod}       % Small: U+2294 ⊔, Large: U+2210 ∐
+\CreateSmartLargeOperator{bigcap}{Capp}         % Small: U+2229 ∩, Large: U+22C2 ⋂
+\CreateSmartLargeOperator{bigcup}{Cupp}         % Small: U+222A ∪, Large: U+22C3 ⋃
+\CreateSmartLargeOperator{bigsqcup}{Kupp}       % Small: U+2294 ⊔, Large: U+2210 ∐
+\CreateSmartLargeOperator{bigodot}{Odot}        % Small: U+2299 ⊙ (no large version)
+\CreateSmartLargeOperator{bigoplus}{Oplus}      % Small: U+2295 ⊕ (no large version)
+\CreateSmartLargeOperator{bigotimes}{Otimes}    % Small: U+2297 ⊗ (no large version)
+\CreateSmartLargeOperator{biguplus}{Uplus}      % Small: U+228E ⊎ (no large version)
+\CreateSmartLargeOperator{bigwedge}{Wedge}      % Small: U+2227 ∧, Large: U+22C0 ⋀
+\CreateSmartLargeOperator{bigvee}{Vee}          % Small: U+2228 ∨, Large: U+22C1 ⋁
+
+
+    % enhanced jigsaw,
+    % colback=tcol_PRF!10,colframe=tcol_PRF!80!black,
+    % boxrule=0pt,
+    % fonttitle=\sffamily\bfseries,coltitle=black,
+    % separator sign={},label separator={},
+    % description font=\normalfont\sffamily,
+    % description delimiters={(}{)},
+    % attach title to upper,after title={.\ },
+    % frame hidden,borderline west={2pt}{0pt}{tcol_PRF},
+    % sharp corners,top=2pt,bottom=2pt,left=5pt,right=5pt,
+    % before skip=10pt,after skip=10pt,breakable
+
+\newtcbtheorem[number within=section,
+    crefname={\color{tcol_PRF!50!black} preuve}{\color{tcol_PRF!50!black} preuves},
+    Crefname={\color{tcol_PRF!50!black} Preuve}{\color{tcol_PRF!50!black} Preuves}
+    ]{myproof}{Preuve}{
+    % boxrule=0pt,boxsep=0pt,blanker,
+    % borderline west={2pt}{0pt}{tcol_PRF},left=8pt,right=8pt,sharp corners,
+    % before skip=10pt,after skip=10pt,breakable
+    enhanced jigsaw,borderline west={2pt}{0pt}{tcol_PRF},
+	breakable,
+	colback = tcol_PRF!0,
+	frame hidden,
+	boxrule = 0sp,
+	sharp corners,
+	detach title,
+	before upper = \tcbtitle\par\smallskip,
+	coltitle = black,
+	fonttitle = \bfseries\sffamily,
+	separator sign none,
+    after title={:},
+    label separator={},
+	segmentation style={solid, tcol_PRF},
+    sharp corners,top=0pt,bottom=2pt,left=5pt,right=5pt,
+    % add sunglasses emoji to end of proof
+    overlay unbroken={
+      \node[anchor=south east,inner sep=0pt] at (frame.south east) {\qed};
+    },
+    overlay first={
+      \node[anchor=south east,inner sep=0pt] at (frame.south east) {\qed};
+    },
+    overlay middle={
+      \node[anchor=south east,inner sep=0pt] at (frame.south east) {\qed};
+    },
+    overlay last={
+      \node[anchor=south east,inner sep=0pt] at (frame.south east) {\qed};
+    },
+    }{}
+    
+\tcolorboxenvironment{proof}{boxrule=0pt,boxsep=0pt,blanker,
+    borderline west={2pt}{0pt}{tcol_PRF},left=8pt,right=8pt,sharp corners,
+    before skip=10pt,after skip=10pt,breakable
+}
+% tcbtheorem with proof
+\tcolorboxenvironment{remark}{boxrule=0pt,boxsep=0pt,blanker,
+    borderline west={2pt}{0pt}{tcol_REM},left=8pt,right=8pt,
+    before skip=10pt,after skip=10pt,breakable
+}
+\tcolorboxenvironment{remarks}{boxrule=0pt,boxsep=0pt,blanker,
+    borderline west={2pt}{0pt}{tcol_REM},left=8pt,right=8pt,
+    before skip=10pt,after skip=10pt,breakable
+}
+\tcolorboxenvironment{example}{boxrule=0pt,boxsep=0pt,blanker,
+    borderline west={2pt}{0pt}{tcol_EXA},left=8pt,right=8pt,sharp corners,
+    before skip=10pt,after skip=10pt,breakable
+}
+\tcolorboxenvironment{examples}{boxrule=0pt,boxsep=0pt,blanker,
+    borderline west={2pt}{0pt}{tcol_EXA},left=8pt,right=8pt,sharp corners,
+    before skip=10pt,after skip=10pt,breakable
+}
+
+% align and align* environments with inline size
+\newenvironment{talign}{\let\displaystyle\textstyle\align}{\endalign}
+\newenvironment{talign*}{\let\displaystyle\textstyle\csname align*\endcsname}{\endalign}
+
+% Setting the format for sections, subsections and subsubsections
+\titleformat{\section}{\fontsize{24}{30}\sffamily\bfseries}{\thesection}{20pt}{#1}
+\titleformat{\subsection}{\fontsize{16}{18}\sffamily\bfseries}{\thesubsection}{12pt}{#1}
+\titleformat{\subsubsection}{\fontsize{10}{12}\sffamily\large\bfseries}{\thesubsubsection}{8pt}{#1}
+% Setting the spacing for sections, subsections and subsubsections
+% First argument is the left indent, second argument is the spacing above, third argument is the spacing below
+\titlespacing*{\section}{0pt}{5pt}{5pt}
+\titlespacing*{\subsection}{0pt}{5pt}{5pt}
+\titlespacing*{\subsubsection}{0pt}{5pt}{5pt}
+
+\newcommand{\Disp}{\displaystyle}
+\newcommand{\qe}{\hfill\(\bigtriangledown\)}
+\DeclareMathAlphabet\mathbfcal{OMS}{cmsy}{b}{n}
+\setlength{\parindent}{0.2in}
+\setlength{\parskip}{0pt}
+\setlength{\columnseprule}{0pt}
+
+\makeatletter
+% Modify spacing above and below display equations
+\g@addto@macro\normalsize{
+    \setlength\abovedisplayskip{3pt}
+    \setlength\belowdisplayskip{3pt}
+    \setlength\abovedisplayshortskip{0pt}
+    \setlength\belowdisplayshortskip{0pt}
+}
+\makeatother
+
+\makeatletter
+
+
+
+
+
+
+%================== Front page ==================%
+\newcommand{\UE}[1]{\renewcommand{\UE}{#1}}
+\newcommand{\sujet}[1]{\renewcommand{\sujet}{#1}}
+\newcommand{\titre}[1]{\renewcommand{\titre}{#1}}
+\newcommand{\enseignant}[1]{\renewcommand{\enseignant}{#1}}
+\newcommand{\eleves}[1]{\renewcommand{\eleves}{#1}}
+
+\newcommand{\makemargins}{
+\makenomenclature
+\pagestyle{fancy}
+\fancyheadoffset{1cm}
+\setlength{\headheight}{2cm}
+\lhead{\includegraphics[scale=0.7]{logos/bonlogo.png}} %Affichage de l'image au top de la page
+\rhead{\nouppercase{\leftmark}}
+\rfoot{\thepage}
+\cfoot{\textbf{\titre}}
+\lfoot{\UE}
+}
+
+
+\newcommand{\makefrontpage}{
+    
+\begin{titlepage}
+\ThisLRCornerWallPaper{1}{logos/Sceau.png}
+	\centering %Centraliser le contenu
+	\includegraphics[width=0.2\textwidth]{logos/logo ulb bleu.jpg}\par\vspace{1cm} %Insertion du logo
+	{\scshape\LARGE Université Libre de Bruxelles \par} %Nom de l'université
+	\vspace{1.5cm}%Espace de 1,5cm
+	{\scshape\Large \UE \\ \sujet \\ \par} %sous-titre
+	\vspace{1cm}%Espace de 1cm
+    \rule{\linewidth}{0.2 mm} \\[0.4 cm]
+	{\huge\bfseries \titre \par} \
+    \rule{\linewidth}{0.2 mm} \\[1.5 cm]
+	\vspace{1cm}%Espace de 3cm
+    
+	\begin{minipage}{0.5\textwidth} %Minipage pour faire deux colonnes
+		\begin{flushleft} \large %Envoyer à gauche
+		\emph{\textbf{Étudiants :}}\\ %Pour le titre au dessus des noms à gauche
+        \eleves\\ %Remplacer pour chacun
+		\end{flushleft}
+	\end{minipage}
+	~
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushright} \large
+		\emph{\textbf{Enseignants :}} \\
+		 \enseignant \\
+		\end{flushright}
+	\end{minipage}\\[4cm]
+    
+	\vfill
+	{\large \today\par} %Affichage de la date
+
+\end{titlepage}
+}
+
+\newcommand{\maketoc}{
+    \begin{tcolorbox}[enhanced,
+        title=Contents,
+        fonttitle=\fontsize{20}{24}\sffamily\bfseries\selectfont,
+        coltitle=black,
+        fontupper=\sffamily,
+        %interior style={left color=tcol_CNT1!80,right color=tcol_CNT2!80},
+        % frame style={left color=tcol_CNT1!60!black,right color=tcol_CNT2!60!black},
+        attach boxed title to top center={yshift=10pt},
+        boxed title style={frame hidden,
+            % interior style={left color=tcol_CNT1,right color=tcol_CNT2},
+            interior style={opacity=0},
+            % frame style={left color=tcol_CNT1!60!black,right color=tcol_CNT2!60!black},
+            height=24pt,bean arc
+            %drop fuzzy shadow
+        },
+        top=2mm,bottom=2mm,left=2mm,right=2mm,
+        before skip=20mm,after skip=20mm,
+        drop fuzzy shadow,breakable]
+    
+    \makeatletter
+    \@starttoc{toc}
+    \makeatother
+    
+    \end{tcolorbox}
+    \newpage
+}
+
+\newtcolorbox{convention}{
+    enhanced,
+    frame hidden,
+    title=Conventions,
+    fonttitle=\large\sffamily\bfseries\selectfont,
+    interior code={
+        \shade[top color=tcol_CNV2!60,bottom color=white] ([yshift=2mm]interior.north west) arc(-180:-90:2mm)--(interior.north east)--(interior.south east)--(interior.south west)--cycle;
+    },
+    overlay={
+        \draw[tcol_CNV1!50!black,line width=0.5mm] ([xshift=2mm]frame.north west)--(frame.north east);
+    },
+    boxrule=0pt,
+    left=2pt,
+    right=2pt,
+    sharp corners=north,
+    attach boxed title to top left,
+    boxed title style={
+        interior hidden,
+        left=1mm,
+        right=1mm,
+        frame code={
+            \path[draw=tcol_CNV1!50!black,line width=0.5mm,fill=tcol_CNV1,rounded corners=2mm] ([xshift=2mm]frame.south east)--(frame.south east)--(frame.north east)--([xshift=0.25mm]frame.north west)--([xshift=0.25mm]frame.south west)--cycle;
+        }
+    },
+    top=2mm,
+    bottom=2mm,
+    before skip=10mm,
+    after skip=10mm
+}
+
+
+
+\usemintedstyle{vs}
+
+\titleclass{\subsubsubsection}{straight}[\subsection]
+
+
+
+%=============listing code================
+\numberwithin{listing}{section}
+\DeclareCaptionFormat{myformat}{\captionsetup{justification=centering}\vspace*{-2em}#1#2#3}
+\newenvironment{code}{\captionsetup{type=listing, format=myformat}\captionsetup{justification=centering}\begin{minipage}{\linewidth}}{\end{minipage}\vspace{0.8em}}
+% \newenvironment{code}{\captionsetup{type=listing, format=myformat}\captionsetup{justification=centering}}{}
+\SetupFloatingEnvironment{listing}{name=Code}
+%=========================================
+
+
+%============== Subsubsubsection ==============
+% \titleformat{\subsubsubsection}
+%   {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+\renewcommand\theparagraph{\thesubsubsubsection.\arabic{paragraph}} % optional; useful if paragraphs are to be numbered
+\titleformat{\subsubsubsection}
+    {\fontsize{11}{10}\sffamily\bfseries}{\thesubsubsubsection}{8pt}{#1}
+
+    
+\titlespacing*{\subsubsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{5}{\z@}%
+  {3.25ex \@plus1ex \@minus.2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries}}
+\renewcommand\subparagraph{\@startsection{subparagraph}{6}{\parindent}%
+  {3.25ex \@plus1ex \@minus .2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries}}
+\def\toclevel@subsubsubsection{4}
+\def\toclevel@paragraph{5}
+\def\toclevel@paragraph{6}
+\def\l@subsubsubsection{\@dottedtocline{4}{7em}{4em}}
+\def\l@paragraph{\@dottedtocline{5}{10em}{5em}}
+\def\l@subparagraph{\@dottedtocline{6}{14em}{6em}}
+\makeatother
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+% ======================================
+
+
+
+
+\definecolor{bg}{gray}{0.95}
+
+
+\DeclareTCBListing{mintedbox}{O{}m!O{}}{%
+  breakable=true,
+  listing engine=minted,
+  listing only,
+  minted language=#2,
+  minted style=default,
+  minted options={%
+    linenos,
+    gobble=0,
+    breaklines=true,
+    breakafter=,,
+    fontsize=\small,
+    numbersep=8pt,
+    #1},
+  boxsep=0pt,
+  left skip=0pt,
+  right skip=0pt,
+  left=25pt,
+  right=0pt,
+  top=3pt,
+  bottom=3pt,
+  arc=5pt,
+  leftrule=0pt,
+  rightrule=0pt,
+  bottomrule=2pt,
+  toprule=2pt,
+  colback=bg,
+  colframe=orange!70,
+  enhanced,
+  overlay={%
+    \begin{tcbclipinterior}
+    \fill[orange!20!white] (frame.south west) rectangle ([xshift=20pt]frame.north west);
+    \end{tcbclipinterior}},
+  #3}
+
+
+  %================================
+% NOTE BOX
+%================================
+
+\usetikzlibrary{arrows,calc,shadows.blur}
+\tcbuselibrary{skins}
+\newtcolorbox{note}[1][]{%
+	enhanced jigsaw,
+	colback=gray!20!white,%
+	colframe=gray!80!black,
+	size=small,
+	boxrule=1pt,
+	title=\textbf{Note:-},
+	halign title=flush center,
+	coltitle=black,
+	breakable,
+	drop shadow=black!50!white,
+	attach boxed title to top left={xshift=1cm,yshift=-\tcboxedtitleheight/2,yshifttext=-\tcboxedtitleheight/2},
+	minipage boxed title=1.5cm,
+	boxed title style={%
+			colback=white,
+			size=fbox,
+			boxrule=1pt,
+			boxsep=2pt,
+			underlay={%
+					\coordinate (dotA) at ($(interior.west) + (-0.5pt,0)$);
+					\coordinate (dotB) at ($(interior.east) + (0.5pt,0)$);
+					\begin{scope}
+						\clip (interior.north west) rectangle ([xshift=3ex]interior.east);
+						\filldraw [white, blur shadow={shadow opacity=60, shadow yshift=-.75ex}, rounded corners=2pt] (interior.north west) rectangle (interior.south east);
+					\end{scope}
+					\begin{scope}[gray!80!black]
+						\fill (dotA) circle (2pt);
+						\fill (dotB) circle (2pt);
+					\end{scope}
+				},
+		},
+	#1,
+}
+
+

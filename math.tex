@@ -1,0 +1,115 @@
+\newcommand{\ep}{\varepsilon}
+\newcommand{\vp}{\varphi}
+\newcommand{\lam}{\lambda}
+\newcommand{\Lam}{\Lambda}
+\DeclareDocumentCommand\ip{ l m }{\braces#1{\langle}{\rangle}{#2}} % Inner product ⟨x,y⟩ (but only one argument is taken, so \ip{x,y} renders as ⟨x,y⟩)
+\DeclareDocumentCommand\floor{ l m }{\braces#1{\lfloor}{\rfloor}{#2}} % Floor function ⌊x⌋
+\DeclareDocumentCommand\ceil{ l m }{\braces#1{\lceil}{\rceil}{#2}} % Ceiling function ⌈x⌉
+
+% Shortcuts for blackboard bold letters, e.g. \A outputs \mathbb{A}
+\def\do#1{\csdef{#1}{\mathbb{#1}}}
+\docsvlist{A,B,C,D,E,F,G,I,J,K,M,N,Q,R,T,U,V,W,X,Y,Z}
+% \H is already defined as a 1-argument command, it places a double acute accent (hungarumlaut) on a character, e.g. \H{o} yields ő
+% \L is already defined as the uppercase Ł (L with stroke)
+% \O is already defined as the uppercase Ø (O with stroke)
+% \P is already defined as the pilcrow ¶ (paragraph mark)
+% \S is already defined as the section sign §
+
+% Shortcuts for calligraphic letters, e.g. \As outputs \mathcal{A}
+\def\do#1{\csdef{#1s}{\mathcal{#1}}}
+\docsvlist{A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z}
+
+% Shortcuts for letters with a bar on top, e.g. \Abar outputs \overline{A}
+\def\do#1{\csdef{#1bar}{\overline{#1}}}
+\docsvlist{a,b,c,d,e,f,g,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z}
+% \hbar is already defined as the symbol ℏ (reduced Planck constant)
+
+% Shortcuts for boldface letters, e.g. \Ab outputs \textbf{A}
+\def\do#1{\csdef{#1b}{\textbf{#1}}}
+\docsvlist{a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,q,r,t,u,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z}
+% \pb is already defined (by the physics package) as a 2-argument command, denoting the anticommutator or Poisson bracket, e.g. \pb{A,B} yields {A,B}
+% \sb is already defined in the LaTeX kernel. This is a fundamental LaTeX command, DO NOT overwrite it!
+% \vb is already defined (by the physics package) as a 1-argument command, for boldface text, e.g. \vb{A} yields \textbf{A}
+
+% Shortcuts for letters with a tilde on top, e.g. \Atil outputs \widetilde{A}
+\def\do#1{\csdef{#1til}{\widetilde{#1}}}
+\docsvlist{a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z}
+
+\newcommand{\tm}{^{\mathsf{T}}}     % Transpose
+\newcommand{\hm}{^{\mathsf{H}}}     % Conjugate transpose (Hermitian conjugate)
+\newcommand{\itm}{^{-\mathsf{T}}}   % Inverse transpose
+\newcommand{\ihm}{^{-\mathsf{H}}}   % Inverse conjugate transpose (Inverse Hermitian conjugate)
+\newcommand{\ex}{\textbf{e}_x}
+\newcommand{\ey}{\textbf{e}_y}
+\newcommand{\ez}{\textbf{e}_z}
+\newcommand{\Aint}{A^\circ}
+\newcommand{\Bint}{B^\circ}
+\newcommand{\limk}{\lim_{k\to\infty}}
+\newcommand{\limm}{\lim_{m\to\infty}}
+\newcommand{\limn}{\lim_{n\to\infty}}
+\newcommand{\limx}[1][a]{\lim_{x\to#1}}
+\newcommand{\limz}[1][{z_0}]{\lim_{z\to#1}}
+\newcommand{\liminfm}{\liminf_{m\to\infty}}
+\newcommand{\limsupm}{\limsup_{m\to\infty}}
+\newcommand{\liminfn}{\liminf_{n\to\infty}}
+\newcommand{\limsupn}{\limsup_{n\to\infty}}
+\newcommand{\sumkn}{\sum_{k=1}^n}
+\newcommand{\sumk}[1][1]{\sum_{k=#1}^\infty}
+\newcommand{\summ}[1][1]{\sum_{m=#1}^\infty}
+\newcommand{\sumn}[1][1]{\sum_{n=#1}^\infty}
+\newcommand{\emp}{\varnothing}
+\newcommand{\exc}{\backslash}
+\newcommand{\sub}{\subseteq}
+\newcommand{\sups}{\supseteq}
+\newcommand{\capp}{\bigcap}
+\newcommand{\cupp}{\bigcup}
+\newcommand{\kupp}{\bigsqcup}
+\newcommand{\cappkn}{\bigcap_{k=1}^n}
+\newcommand{\cuppkn}{\bigcup_{k=1}^n}
+\newcommand{\kuppkn}{\bigsqcup_{k=1}^n}
+\newcommand{\cappk}[1][1]{\bigcap_{k=#1}^\infty}
+\newcommand{\cuppk}[1][1]{\bigcup_{k=#1}^\infty}
+\newcommand{\cappm}[1][1]{\bigcap_{m=#1}^\infty}
+\newcommand{\cuppm}[1][1]{\bigcup_{m=#1}^\infty}
+\newcommand{\cappn}[1][1]{\bigcap_{n=#1}^\infty}
+\newcommand{\cuppn}[1][1]{\bigcup_{n=#1}^\infty}
+\newcommand{\kuppk}[1][1]{\bigsqcup_{k=#1}^\infty}
+\newcommand{\kuppm}[1][1]{\bigsqcup_{m=#1}^\infty}
+\newcommand{\kuppn}[1][1]{\bigsqcup_{n=#1}^\infty}
+\newcommand{\cappa}{\bigcap_{\alpha\in I}}
+\newcommand{\cuppa}{\bigcup_{\alpha\in I}}
+\newcommand{\kuppa}{\bigsqcup_{\alpha\in I}}
+\newcommand{\dx}{\,dx}
+\newcommand{\dy}{\,dy}
+\newcommand{\dt}{\,dt}
+\newcommand{\dmu}{\,d\mu}
+\newcommand{\dnu}{\,d\nu}
+\DeclareMathOperator{\glb}{\text{glb}}
+\DeclareMathOperator{\lub}{\text{lub}}
+\newcommand{\xh}{\widehat{x}}
+\newcommand{\yh}{\widehat{y}}
+\newcommand{\zh}{\widehat{z}}
+\newcommand{\<}{\langle}
+\renewcommand{\>}{\rangle}
+
+% Shortcuts for inverse hyperbolic functions (and other operators with the same structure)
+\def\do#1{\csdef{#1}{\trigbraces{\operatorname{#1}}}}
+\docsvlist{
+    asinh,acosh,atanh,acoth,asech,acsch,
+    arsinh,arcosh,artanh,arcoth,arsech,arcsch,
+    arcsinh,arccosh,arctanh,arccoth,arcsech,arccsch,
+    sen,tg,cth,senh,tgh,ctgh,
+    Re,Im,arg,Arg,im,ker
+}
+
+% \spn has to be defined separately as the syntax "spn" is different from the output "span"
+% \span is already defined in the LaTeX kernel. This is a fundamental LaTeX command, DO NOT overwrite it!
+\newcommand{\spn}{\trigbraces{\operatorname{span}}}
+
+\makeatletter
+% Redefining the commands \iff (given by LaTeX), \implies and \impliedby (given by amsmath)
+% Math mode is automatically enforced, starred version makes the arrows shorter
+\renewcommand{\impliedby}{\@ifstar{\ensuremath{\Longleftarrow}}{\ensuremath{\Leftarrow}}} % Corresponding Unicode character: U+21D0 ⇐
+\renewcommand{\implies}{\@ifstar{\ensuremath{\Longrightarrow}}{\ensuremath{\Rightarrow}}} % Corresponding Unicode character: U+21D2 ⇒
+\renewcommand{\iff}{\@ifstar{\ensuremath{\Longleftrightarrow}}{\ensuremath{\Leftrightarrow}}} % Corresponding Unicode character: U+21D4 ⇔
+\makeatother

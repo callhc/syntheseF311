@@ -1,0 +1,822 @@
+\begin{convention}
+$\F$ denotes either $\R$ or $\C$.\\
+$\N$ denotes the set $\{1,2,3,\ldots\}$ of natural numbers (excluding $0$).\\
+Inner products are taken to be linear in the first argument and conjugate linear in the second.\\
+The Einstein summation convention is used for tensors unless otherwise specified.
+\end{convention}
+
+\newpage
+
+\section{Main structure}
+
+We start by defining several theorem-type environments 
+(e.g. definition, proposition, theorem, lemma, corollary) using the 
+\verb!\newtcbtheorem! macro from the \href{https://ctan.org/pkg/tcolorbox}{\texttt{tcolorbox}} package. 
+In a real mathematics document, these will all have the same format (perhaps differing only in color). 
+The purpose of having different formats here is to help you choose your favorite one (
+or adapt one or more of them to your liking) and apply it to all of the theorem-type environments.\\
+
+For best practices and other general advice on writing in \LaTeX, see \cite{evanchen,gleave}.
+
+\subsection{Theorem environments}
+
+\begin{definition}{}{continuous}
+A function $f:I\to\R$ is \textbf{continuous} at $a\in I$ if $\limx f(x)=f(a)$.
+\end{definition}
+
+\begin{definition}{The Derivative}{derivative}
+The \textbf{derivative} of a function $f:I\to\R$ at $a\in I$ is given by:
+\begin{equation*}
+    f'(a)=\limx\frac{f(x)-f(a)}{x-a}
+\end{equation*}
+\end{definition}
+
+Note that \Cref{derivative} has a name (\nameref{derivative}), while \Cref{continuous} does not.
+
+\begin{center}
+You know those awesome commutative diagrams?\\
+\begin{tikzcd}
+    A \arrow[r,"p"] \arrow[d,red,"q"'] & B \arrow[d,"r" red] \\
+    C \arrow[r,red,"s"' blue] & D
+\end{tikzcd}\\
+The derivative has \emph{nothing} to do with them!
+\end{center}
+
+\begin{proposition}{Differentiable \implies\ continuous}{diffcont}
+If $f$ is differentiable at $a$, then $f$ is continuous at $a$.
+\end{proposition}
+\begin{proof}
+Exercise (but only because this is a template).
+\end{proof}
+
+The converse of \Cref{diffcont} is not true in general.
+
+\begin{examples}\leavevmode % This is needed to start the list on the next line so it won't be misaligned
+\begin{enumerate}
+    \item $f(x)=\abs{x}$ \hfill (not differentiable at $0$)
+    \item $f(x)=\begin{cases} \sin(x) & x\ge 0 \\ 0 & x<0 \end{cases}$ \hfill (not differentiable at $0$)
+\end{enumerate}
+\end{examples}
+
+\begin{theorem}{Two statements}{twost}
+The following statements are true:
+\begin{enumerate}[ref={(\arabic*)}]
+    \item\label{twost:1} First statement
+    \item\label{twost:2} Second statement
+\end{enumerate}
+\end{theorem}
+\begin{proof}% For some reason, the proof environment does not need \leavevmode
+\begin{enumerate}
+    \item Proof of \ref{twost:1}.
+    \item Proof of \ref{twost:2}. Note that the QED symbol is on this line, thanks to \verb!\qedhere!. \qedhere % \qedhere is to place the qed symbol here instead of in the next line
+\end{enumerate}
+\end{proof}
+
+\begin{corollary}{Another statement}{thirdst}
+Third statement.
+\end{corollary}
+\begin{proof}
+This follows by combining \ref{twost:1} and \ref{twost:2} of \Cref{twost}. $\gets$ \scriptsize{\textsf{Try clicking on these}}
+\end{proof}
+\begin{remark}
+This corollary is also obvious.
+\end{remark}
+
+\begin{corollary}{}{}
+Unlike \Cref{thirdst}, this corollary has no name.
+\end{corollary}
+
+\begin{lemma}{}{square}
+$(a+b)^2=a^2+2ab+b^2$
+\end{lemma}
+\begin{proof}\let\qed\relax
+Expand the left side. Note that there is no QED symbol in this proof, thanks to \verb!\let\qed\relax!.
+\end{proof}
+\begin{remarks}\leavevmode % This is needed to start the list on the next line so it won't be misaligned
+\begin{enumerate}
+    \item It's also kind of obvious.
+    \item No extra points for guessing what $(a-b)^2$ is.
+\end{enumerate}
+\end{remarks}
+
+\begin{example}
+$(2+4)^2=2^2+2\cdot 2\cdot 4+4^2=4+16+16=36$
+\end{example}
+
+\begin{proposition}{}{trig_square}
+\begin{equation}\label{trig_square_eqn} (\cos(x)+i\sin(x))^2=\cos(x)^2-\sin(x)^2+2i\sin(x)\cos(x)
+\end{equation}
+\end{proposition}
+\begin{proof}
+Exercise (use \Cref{square}).
+\end{proof}
+
+Note that referencing \cref{trig_square} is not the same as referencing \eqref{trig_square_eqn}.
+
+\begin{lemma}{Euler's identity}{euler}
+\begin{equation*}
+    e^{ix}=\cos(x)+i\sin(x)
+\end{equation*}
+\end{lemma}
+
+\begin{theorem}{}{double_angle}
+\begin{align}
+    \cos(2x)=\cos(x)^2-\sin(x)^2 && \sin(2x)=\sin(x)\cos(x)
+\end{align}
+\end{theorem}
+\begin{proof}
+By \Cref{euler}, the left side of \eqref{trig_square_eqn} is simply $\qty(e^{ix})^2=e^{2ix}$. Now take the real and imaginary parts of the right side.
+\end{proof}
+
+This proof assumes $x$ and $y$ are real numbers. What would you do if they were complex numbers?
+
+\begin{corollary}{}{}
+Suppose $\alpha$ and $\beta$ are the angles shown below:
+\begin{center}
+    \begin{minipage}{7cm}
+    \begin{center}
+        \begin{tikzpicture}[scale=0.6]
+            % \draw (-4,0)--(0,0)--(0,3)--cycle; % Triangle with no labels
+            \draw (-4,0)--(0,0) node[midway,below]{4}           % Side of length 4
+                --(0,3) node[midway,right]{3}                   % Side of length 3
+                --cycle node[midway,above=2pt]{5};              % Side of length 5
+            \draw (-3,0) arc(0:{atan(3/4)}:1)                   % Arc denoting angle α
+                node[midway,xshift=6pt,yshift=3pt]{$\alpha$};   % Label α
+            \draw (-0.4,0)--(-0.4,0.4)--(0,0.4);
+        \end{tikzpicture}
+    \end{center}
+    \end{minipage}
+    \begin{minipage}{7cm}
+    \begin{center}
+        \begin{tikzpicture}[scale=0.25]
+            % \draw (0,0)--(24,0)--(0,7)--cycle; % Triangle with no labels
+            \draw (0,0)--(24,0) node[midway,below]{24}          % Side of length 24
+                --(0,7) node[midway,above=2pt]{25}              % Side of length 25
+                --cycle node[midway,left]{7};                   % Side of length 7
+            \draw (0,5) arc(-90:{-atan(7/24)}:2)                % Arc denoting angle β
+                node[midway,xshift=2pt,yshift=-7pt]{$\beta$};   % Label β
+            \draw (1,0)--(1,1)--(0,1);
+        \end{tikzpicture}
+    \end{center}
+    \end{minipage}
+\end{center}
+\vspace{-5pt} % Remove some of the vertical space created by \end{center}
+Then $\beta=2\alpha$.
+\end{corollary}
+\begin{proof}
+Exercise (use \Cref{double_angle}).
+\end{proof}
+
+You can generate other Pythagorean triples this way\footnote{In fact, you can generate \emph{all} Pythagorean triples this way. Can you figure out how?}.
+
+\subsection{Other options}
+
+There's no need to stick to the
+\tcbox[colback=blue!10,colframe=blue,
+    fontupper=\slshape,
+    boxrule=1pt,boxsep=0pt,sharp corners,on line,
+    top=2pt,bottom=2pt,left=2pt,right=2pt
+]{status quo}
+with \LaTeX\ formatting. You can go
+\tcbox[blanker,fontupper=\sffamily\bfseries,
+left=4mm,right=4mm,on line,
+overlay={
+    \draw[shift={([xshift=2mm]frame.west)},thin,red!70!black,fill=yellow] (0.05,0.3)--(-0.1,-0.1)--(0.02,-0.02)--(-0.05,-0.3)--(0.1,0.1)--(-0.02,0.02)--cycle;
+    \draw[shift={([xshift=-2mm]frame.east)},thin,red!70!black,fill=yellow] (0.05,0.3)--(-0.1,-0.1)--(0.02,-0.02)--(-0.05,-0.3)--(0.1,0.1)--(-0.02,0.02)--cycle;}
+]{WILD}
+!
+
+\begin{theorem}[colback=black,colframe=green,colupper=white,
+    fontupper=\ttfamily,
+    boxrule=4pt,
+    interior style={left color=black,right color=black,middle color=gray!80!black}, % middle color must come AFTER left color and right color!
+    frame style={top color=green,bottom color=orange,middle color=pink}, % middle color must come AFTER top color and bottom color!
+    coltitle=red,boxed title style={colback=yellow,colframe=gray},
+    ,overlay={
+        \fill[pattern=horizontal lines,pattern color=red] ([xshift=-38mm]interior.south east)--++(8mm,0)--([yshift=30mm]interior.south east)--++(0,8mm)--cycle
+        node[midway,shift={(0,-0.2*sqrt(2))},sloped,cyan,font=\sffamily\bfseries]{ENGINEERS LOVE THIS!};
+    },
+    breakable=false]{\normalfont\scshape Residue Theorem}{}
+Suppose $\Omega$ is a simply connected open subset of $\C$, $\gamma$ is a positively oriented simple closed curve  in $\Omega$ and $f:\Omega\to\C$ is holomorphic on $\Omega$ except at the points $a_1,a_2,\ldots,a_n$ inside $\gamma$. Then:
+\begin{center}
+\begin{tikzpicture}[scale=1,every node/.style={transform shape}]
+    \definecolor{col_int_gamma}{HTML}{0B22A3} % Color of Ω=int(γ)
+    \clip (-4,-2) rectangle (4,2);
+    \draw[-,thick,draw=white,rounded corners=2mm,fill=col_int_gamma] (0,-1.1)--(0.5,-1.4)--(1,-1.7)--(1.5,-1.9)--(2,-1.9)--(2.5,-1.8)--(3,-1.6)--(3.5,-1.3)--(3.6,-1)--(3.8,-0.5)--(3.7,0.1)--(3.5,0.5)--(3.2,1)--(3,1.2)--(2.5,1.5)--(2,1.7)--(1.5,1.8)--(1,1.8)--(0.5,1.7)--(0,1.5)--(-0.5,1.3)--(-1,1.2)--(-1.5,1.3)--(-2,1.6)--(-2.4,1.8)--(-2.7,1.7)--(-3,1.6)--(-3.5,1.1)--(-3.8,0.5)--(-3.8,0)--(-3.7,-0.5)--(-3.5,-0.8)--(-3.3,-1)--(-3,-1.3)--(-2.5,-1.4)--(-2.2,-1.4)--(-1.9,-1.3)--(-1.5,-1.1)--(-1,-1)--(-0.5,-1)--cycle;
+    \draw[-{Stealth[length=6pt,width=4pt]}] (3.68,-0.8)--(3.7,-0.75);
+    \draw[-{Stealth[length=6pt,width=4pt]}] (-0.2,1.42)--(-0.25,1.4);
+    \draw[-{Stealth[length=6pt,width=4pt]}] (-3.21,-1.09)--(-3.15,-1.15);
+    \fill (-2.5,1.2) circle (1.2pt) node[left]{$a_1$};
+    \fill (-2,-0.8) circle (1.2pt) node[left]{$a_2$};
+    \fill (1.2,-1.2) circle (1.2pt);
+    \fill (2.8,-0.8) circle (1.2pt) node[right]{$a_n$};
+    \fill (1.7,1.3) circle (1.2pt);
+    \node[font=\Large] at (0.35,-1.65) {$\gamma$};
+    \node[font=\Large] at (0,0) {$\displaystyle\oint_\gamma f(z)\,dz=2\pi i\sum_{k=1}^n \operatorname{Res}(f,a_k)$};
+\end{tikzpicture}
+\end{center}
+\end{theorem}
+
+A lot of nice integrals can be computed using the $\underbrace{\text{\href{http://residuetheorem.com/}{residue theorem}}}_{\textsf{Click on this link}}$, see \cite[\S5.2]{taylor}.\\
+% \underbrace only works in math mode, so \text{...} is required to render text using it
+
+\section{Macros}
+\subsection{The \texttt{talign} environment}
+
+The \verb!talign! and \verb!talign*! environments work like the \verb!align! and \verb!align*! environments, except they render equations in inline size. They have the same numbering and labeling options as \verb!align! and \verb!align*!.
+
+\begin{verbbox}
+\begin{align}
+    \sum_{n=1}^2 \frac{1}{3n}=\int_0^1 x\,dx
+\end{align}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{align*}
+    \sum_{n=1}^2 \frac{1}{3n}=\int_0^1 x\,dx
+\end{align*}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{talign}
+    \sum_{n=1}^2 \frac{1}{3n}=\int_0^1 x\,dx
+\end{talign}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{talign*}
+    \sum_{n=1}^2 \frac{1}{3n}=\int_0^1 x\,dx
+\end{talign*}
+\end{verbbox}
+
+\subsection{Vector and Matrix macros}
+
+The \verb!\cvc!, \verb!\rvc! and \verb!\mat! commands can be used to typeset column vectors, row vectors and $m\times n$ matrices efficiently. The vector/matrix delimiters can also be changed, using the optional argument \texttt{p}, \texttt{b}, \texttt{B}, \texttt{v} or \texttt{V} (in accordance with \texttt{pmatrix}, \texttt{bmatrix}, \texttt{Bmatrix}, \texttt{vmatrix} or \texttt{Vmatrix} respectively from \href{https://ctan.org/pkg/amsmath}{\texttt{amsmath}}). The default is parentheses ( ). Of course, these commands can only be used in math mode.
+
+\vspace{5pt}
+
+\begin{multicols}{2}
+\begin{verbbox}
+$$\cvc{2,3,1}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\rvc{5,7,6}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\rvc{8,,4}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\rvc{a,b_1,c^2,\&}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\mat{4,8}{0,9}{6,3}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\mat{1,7}{8,9,2,5}$$
+\end{verbbox}
+%%%%%%%%%%%%        %%%%%%%%%%%%        %%%%%%%%%%%%
+\begin{verbbox}
+$$\cvc[]{2,3,1}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\rvc[p]{5,7,6}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\rvc[b]{8,,4}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\rvc[B]{a,b_1,c^2,\&}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\mat[v]{4,8}{0,9}{6,3}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\mat[V]{1,7}{8,9,2,5}$$
+\end{verbbox}
+\end{multicols}
+
+\vspace{15pt}
+
+{\sffamily From now on, every subsection will start on a new page (see the code for how to do this).}
+
+\newcommand{\subsectionbreak}{\clearpage} % Start every subsection on a new page
+
+\subsection{Box macros}
+
+Here we provide three customizable \href{https://ctan.org/pkg/tcolorbox}{\texttt{tcolorbox}} environments that are perhaps less suited to theorem-type environments (but of course, they can still be used for these) and more suited to ``lower-level'' environments, e.g. discussions or examples one would like to explain in more detail.
+
+\subsubsection*{The \texttt{filingbox} environment}
+
+The \texttt{filingbox} environment is a \texttt{tcolorbox} environment that creates boxes in the shape of filing dividers. It has two optional arguments (the first delimited by parentheses, the second by brackets) and one mandatory argument.
+\begin{itemize}
+    \item The first optional argument specifies the position of the tab. It can be \texttt{ul} (up left), \texttt{uc} (up center), \texttt{ur} (up right), \texttt{dl} (down left), \texttt{dc} (down center) and \texttt{dr} (down right). The default is \texttt{ul}.
+    \item The second optional argument specifies the color of the box. The background of the box is automatically set to this color with 10\% opacity. The default is black.
+    \item The mandatory argument specifies the title.
+\end{itemize}
+Additional \texttt{tcolorbox} options can be specified after the title.
+
+\begin{verbbox}
+\begin{filingbox}{Title here}
+This is a \textbf{filingbox}.
+\end{filingbox}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{filingbox}(uc)[red]{Title here}
+This is a \textbf{filingbox}.
+\end{filingbox}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{filingbox}(ur){Title here}[halign=center]
+This is a \textbf{filingbox}.
+\end{filingbox}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{filingbox}(dl)[blue]{Title here}[left=20mm]
+This is a \textbf{filingbox}.
+\end{filingbox}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{filingbox}(dc){Title here}[before upper=\&]
+This is a \textbf{filingbox}.
+\end{filingbox}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{filingbox}(dr){Title here}[colupper=red]
+This is a \textbf{filingbox}.
+\end{filingbox}
+\end{verbbox}
+
+\subsubsection*{The \texttt{railingbox} environment}
+
+The \texttt{railingbox} environment is a \texttt{tcolorbox} environment that creates boxes in the shape of railing bars. It is similar to the \texttt{filingbox} environment, except that it produces a box with sharp corners. It has the same argument structure as \texttt{filingbox}.
+
+\begin{verbbox}
+\begin{railingbox}{Title here}
+This is a \textbf{railingbox}.
+\end{railingbox}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{railingbox}(uc)[violet]{Title here}
+This is a \textbf{railingbox}.
+\end{railingbox}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{railingbox}(ur){Title here}[coltitle=orange]
+This is a \textbf{railingbox}.
+\end{railingbox}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{railingbox}(dl)[teal]{Title here}
+This is a \textbf{railingbox}.
+\end{railingbox}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{railingbox}(dc){Title here}[after upper=DC]
+This is a \textbf{railingbox}.
+\end{railingbox}
+\end{verbbox}
+
+\begin{verbbox}
+\begin{railingbox}(dr)[pink]{Title here}
+This is a \textbf{railingbox}.
+\end{railingbox}
+\end{verbbox}
+
+\subsubsection*{The \texttt{flagbox} environment}
+
+The \texttt{flagbox} environment is a \texttt{tcolorbox} environment that creates boxes in the shape of flags. It has the same argument structure as \texttt{filingbox}, except that the position of the tab can only be \texttt{ul}, \texttt{ur}, \texttt{dl} or \texttt{dr} (the default is still \texttt{ul}).
+
+\begin{verbbox}
+\begin{flagbox}{Title here}
+This is a \textbf{flagbox}.\\
+
+The flagpole extends to the bottom of the box.
+\end{flagbox}
+\end{verbbox}
+\begin{verbbox}
+\begin{flagbox}(ur)[orange]{Title here}
+This is a \textbf{flagbox}.\\
+
+The flagpole extends to the bottom of the box.
+\end{flagbox}
+\end{verbbox}
+\begin{verbbox}
+\begin{flagbox}(dl)[purple]{Title here}
+This is a \textbf{flagbox}.\\
+
+The flagpole extends to the top of the box.
+\end{flagbox}
+\end{verbbox}
+\begin{verbbox}
+\begin{flagbox}(dr){Title here}[fontupper=\itshape]
+This is a \textbf{flagbox}.\\
+
+The flagpole extends to the top of the box.
+\end{flagbox}
+\end{verbbox}
+
+\subsection{Ball macros}
+
+The command \verb!\solidball! produces a customizable solid pool ball. It has four arguments, two optional and two mandatory.
+\begin{itemize}
+    \item The first (optional) argument specifies the text in the center of the ball. The default is blank (no text). The text format can also be manually specified, e.g. with \verb!\color{white} abc!.
+    \item The second (mandatory) argument specifies the color of the ball.
+    \item The third (optional) argument specifies the color of the ``background'' of the ball, i.e. the area behind the text (though it will be shown even if there is no text). The default is \texttt{white}.
+    \item The fourth (mandatory) argument specifies the size of the ball. If this is \texttt{1}, the diameter of the ball will be 1 cm. This argument can be specified as an integer (e.g. \texttt{2}), a floating-point number (e.g. \texttt{0.75}) or a mathematical expression (e.g. \texttt{2*3/8}).
+\end{itemize}
+
+There is also a starred version \verb!\solidball*!, where the background is not drawn. In this version, the third argument is redundant.
+
+\begin{tcolorbox}[blanker,sidebyside,before skip=10pt,after skip=10pt]
+\begin{verbbox}[righthand width=1.3cm]
+\solidball{red}{1}
+\end{verbbox}
+\begin{verbbox}[righthand width=1.3cm]
+\solidball[2]{blue}{0.8}
+\end{verbbox}
+\begin{verbbox}[righthand width=1.3cm]
+\solidball{green}[pink]{0.6}
+\end{verbbox}
+\begin{verbbox}[righthand width=1.3cm]
+\solidball[3a]{violet}[red]{1}
+\end{verbbox}
+\tcblower %%%%%%%% %%%%%%%% %%%%%%%% %%%%%%%%
+\begin{verbbox}[righthand width=1.3cm]
+\solidball*{red}{1}
+\end{verbbox}
+\begin{verbbox}[righthand width=1.3cm]
+\solidball*[\$]{yellow}{4/5}
+\end{verbbox}
+\begin{verbbox}[righthand width=1.3cm]
+\solidball*{blue}[green]{(9-3)/10}
+\end{verbbox}
+\begin{verbbox}[righthand width=1.3cm]
+\solidball*[6Z]{gray}[blabla]{1}
+\end{verbbox}
+\end{tcolorbox}
+
+The command \verb!\stripedball! produces a customizable striped pool ball. It has the same argument structure as \verb!\solidball!, as well as a starred version that omits the background (but the stripe is still drawn, so the third argument is no longer redundant).
+
+\begin{tcolorbox}[blanker,sidebyside,before skip=10pt,after skip=10pt]
+\begin{verbbox}[righthand width=1.3cm]
+\stripedball{yellow}{1}
+\end{verbbox}
+\begin{verbbox}[righthand width=1.3cm]
+\stripedball[2]{violet}{0.5}
+\end{verbbox}
+\begin{verbbox}[righthand width=1.3cm]
+\stripedball{orange}[blue]{.75}
+\end{verbbox}
+\begin{verbbox}[righthand width=1.3cm]
+\stripedball[$\rho$]{red}[green]{1}
+\end{verbbox}
+\tcblower %%%%%%%% %%%%%%%% %%%%%%%% %%%%%%%%
+\begin{verbbox}[righthand width=1.3cm]
+\stripedball*{green}{1}
+\end{verbbox}
+\begin{verbbox}[righthand width=1.3cm]
+\stripedball*[V]{white}[brown]{1/2}
+\end{verbbox}
+\begin{verbbox}[righthand width=1.3cm]
+\stripedball*{black}{sqrt(9/16)}
+\end{verbbox}
+\begin{verbbox}[righthand width=1.3cm]
+\stripedball*[mb]{pink}[yellow]{1}
+\end{verbbox}
+\end{tcolorbox}
+
+\newpage % Page break, i.e. skip to the next page
+
+The command \verb!\poolball! is based on \verb!\solidball! and \verb!\stripedball! and produces the standard (Aramith Tournament) pool balls. It has one optional argument and two mandatory arguments.
+\begin{itemize}
+    \item The optional argument specifies the text in the center of the ball. If this is not specified, the value of the first mandatory argument will be used.
+    \item The first mandatory argument specifies the number on the ball (the color and whether it is solid or striped are automatically determined from this). If this is \texttt{0} (or any multiple of 16), it will produce the cue ball.
+    \item The second mandatory argument specifies the size of the ball (identically to \verb!\solidball! and \verb!\stripedball!).
+\end{itemize}
+
+\begin{center}
+\renewcommand*{\arraystretch}{1.25} % Redefine \arraystretch for this table only
+\begin{tabular}{cccc}
+    \poolball{1}{1} & \poolball{2}{1} & \poolball{3}{1} & \poolball{4}{1} \\
+    \verb!\poolball{17}{1}! & \verb!\poolball{2}{1}! & \verb!\poolball{3}{1}! & \verb!\poolball{4}{1}! \\[4pt]
+    \poolball{5}{1} & \poolball{6}{1} & \poolball{7}{1} & \poolball{8}{1} \\
+    \verb!\poolball{5}{1}! & \verb!\poolball{6}{1}! & \verb!\poolball{7}{1}! & \verb!\poolball{8}{1}! \\[4pt]
+    \poolball{9}{1} & \poolball{10}{1} & \poolball{11}{1} & \poolball{12}{1} \\
+    \verb!\poolball{9}{1}! & \verb!\poolball{10}{1}! & \verb!\poolball{11}{1}! & \verb!\poolball{12}{1}! \\[4pt]
+    \poolball{13}{1} & \poolball{14}{1} & \poolball{15}{1} & \poolball{0}{1} \\
+    \verb!\poolball{13}{1}! & \verb!\poolball{14}{1}! & \verb!\poolball{15}{1}! & \verb!\poolball{0}{1}!
+\end{tabular}
+\end{center}
+
+The first argument is only defined modulo 16, so \verb!\poolball{19}{1}! and \verb!\poolball{-13}{1}! produce the same result as \verb!\poolball{3}{1}!.
+
+\subsection{Smart Operator Macros}
+
+The \verb!\Sum! command is a ``smart'' version of the \verb!\sum! command (provided by \LaTeX) that incorporates styles and upper and lower limits into its arguments. It is based on the options provided by \href{https://ctan.org/pkg/amsmath}{\texttt{amsmath}}.\\
+
+The \verb!\Sum! command takes one optional argument and one set of mandatory arguments, separated by commas.
+
+\begin{itemize}
+\newcommand{\argnumber}[1]{ % This command is only defined locally, i.e. only within the itemize list
+    \ifnum#1=1\texttt{\color{red!80!black}\#1}\fi
+    \ifnum#1=2\texttt{\color{Orange!80!black}\#2}\fi
+    \ifnum#1=3\texttt{\color{Dandelion!80!black}\#3}\fi
+    \ifnum#1=4\texttt{\color{Green!80!black}\#4}\fi
+    \ifnum#1=5\texttt{\color{blue!80!black}\#5}\fi
+}
+    \item If no mandatory argument is present, the sum is over $n$ and runs from $n=1$ to $\infty$.
+    \item If one mandatory argument \argnumber{1} is present, the sum is over $n$ and runs from $n=$\argnumber{1} to $\infty$.
+    \item If two mandatory arguments \argnumber{1},\argnumber{2} are present, the sum is over $n$ and runs from $n=$\argnumber{1} to \argnumber{2}.
+    \item If three mandatory arguments \argnumber{1},\argnumber{2},\argnumber{3} are present, the sum is over \argnumber{1} and runs from \argnumber{1} =\argnumber{2} to \argnumber{3}.
+    \item If four mandatory arguments \argnumber{1},\argnumber{2},\argnumber{3},\argnumber{4} are present, the sum is over \argnumber{1} \emph{and} \argnumber{2} and runs from \argnumber{1},\argnumber{2} =\argnumber{3} to \argnumber{4}.
+    \item If five mandatory arguments \argnumber{1},\argnumber{2},\argnumber{3},\argnumber{4},\argnumber{5} are present, the sum is over \argnumber{1},\argnumber{2} \emph{and} \argnumber{3} runs from \argnumber{1},\argnumber{2},\argnumber{3} =\argnumber{4} to \argnumber{5}.
+\end{itemize}
+\begin{warning}
+    The mandatory argument cannot be omitted! Simply writing \verb!\Sum! will lead to errors.
+\end{warning}
+
+\subsubsection*{Inline mode}
+
+\begin{multicols}{2} % Inline versions
+\tcbset{height=0.8cm} % Locally fix tcolorbox height to match boxes next to each other
+\begin{verbbox}
+$\Sum{}$
+\end{verbbox}
+
+\begin{verbbox}
+$\Sum{3,8}$
+\end{verbbox}
+
+\begin{verbbox}
+$\Sum{i,j,\Omega,\tau}$
+\end{verbbox}
+%%%%%%%%%%%%        %%%%%%%%%%%%        %%%%%%%%%%%%
+\begin{verbbox}
+$\Sum{4}$
+\end{verbbox}
+
+\begin{verbbox}
+$\Sum{m,6,25}$
+\end{verbbox}
+
+\begin{verbbox}
+$\Sum{\&,\$,\{,?,+}$
+\end{verbbox}
+\end{multicols}
+
+\subsubsection*{Display mode}
+
+\begin{multicols}{2} % Display versions
+\tcbset{height=1.5cm} % Locally fix tcolorbox height to match boxes next to each other
+\begin{verbbox}
+$$\Sum{}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\Sum{3,8}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\Sum{i,j,\Omega,\tau}$$
+\end{verbbox}
+%%%%%%%%%%%%        %%%%%%%%%%%%        %%%%%%%%%%%%
+\begin{verbbox}
+$$\Sum{4}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\Sum{m,6,25}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\Sum{\&,\$,\{,?,+}$$
+\end{verbbox}
+\end{multicols}
+
+The optional argument of the \verb!\Sum! command specifies the style of the sum. The standard \verb!\sum! command can be customized in the following ways:
+\begin{itemize}
+    \item By adding \verb!\limits! (to show the limits above and below the sum) or \verb!\nolimits! (to show the limits beside the sum). These are added \emph{after} the command \verb!\sum!.
+    \item It can also be customized by adding \verb!\textstyle! (to show the sum in inline style) or \verb!\displaystyle! (to show the sum in display style). These are added \emph{before} the command \verb!\sum!.
+\end{itemize}
+In the smart \verb!\Sum! command, these options are incorporated into the optional argument.\\
+
+There are eight options for the optional argument of \verb!\Sum!:
+\vspace*{-10pt}
+\begin{multicols}{2}
+\begin{itemize}[leftmargin=0.5in,labelsep=0.3in]
+    \item[\texttt{l}] Limits above and below
+    \item[\texttt{n}] Limits beside
+    \item[\texttt{i}] Inline style
+    \item[\texttt{d}] Display style
+    \item[\texttt{il}] Inline style with limits above and below
+    \item[\texttt{in}] Inline style with limits beside
+    \item[\texttt{dl}] Display style with limits above and below
+    \item[\texttt{dn}] Display style with limits beside
+\end{itemize}
+\end{multicols}
+
+The optional argument overrides any pre-defined options, i.e. \verb!\textstyle\Sum[d]{8}! is equivalent to \verb!\Sum[d]{8}!.\\
+
+If the optional argument is empty, it will be treated as absent, i.e. \verb!\Sum[]{8}! is equivalent to \verb!\Sum{8}!.
+
+\begin{multicols}{2}
+\tcbset{height=1.5cm} % Locally fix tcolorbox height to match boxes next to each other
+\begin{verbbox}
+$$\Sum[l]{}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\Sum[n]{}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\Sum[i]{}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\Sum[d]{}$$
+\end{verbbox}
+%%%%%%%%%%%%        %%%%%%%%%%%%        %%%%%%%%%%%%
+\begin{verbbox}
+$$\Sum[il]{}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\Sum[in]{}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\Sum[dl]{}$$
+\end{verbbox}
+
+\begin{verbbox}
+$$\Sum[dn]{}$$
+\end{verbbox}
+\end{multicols}
+
+All of the standard large operators have a ``smart'' version, as shown below:
+
+\begin{center}
+\renewcommand*{\arraystretch}{1.5} % Redefine \arraystretch for this table only
+\begin{tabular}{ccccccc}
+    Standard operator & \verb!\sum! & \verb!\prod! & \verb!\coprod! & \verb!\bigcap! & \verb!\bigcup! & \verb!\bigsqcup! \\
+    Smart operator & \verb!\Sum! & \verb!\Prod! & \verb!\Coprod! & \verb!\Capp! & \verb!\Cupp! & \verb!\Kupp! \\
+    Inline style & $\Sum[i]{}$ & $\Prod[i]{}$ & $\Coprod[i]{}$ & $\Capp[i]{}$ & $\Cupp[i]{}$ & $\Kupp[i]{}$ \\
+    Display style & $\Sum[d]{}$ & $\Prod[d]{}$ & $\Coprod[d]{}$ & $\Capp[d]{}$ & $\Cupp[d]{}$ & $\Kupp[d]{}$ \\[12pt] % Add extra vertical space here
+    Standard operator & \verb!\bigodot! & \verb!\bigoplus! & \verb!\bigotimes! & \verb!\biguplus! & \verb!\bigwedge! & \verb!\bigvee! \\
+    Smart operator & \verb!\Odot! & \verb!\Oplus! & \verb!\Otimes! & \verb!\Uplus! & \verb!\Wedge! & \verb!\Vee! \\
+    Inline style & $\Odot[i]{}$ & $\Oplus[i]{}$ & $\Otimes[i]{}$ & $\Uplus[i]{}$ & $\Wedge[i]{}$ & $\Vee[i]{}$ \\
+    Display style & $\Odot[d]{}$ & $\Oplus[d]{}$ & $\Otimes[d]{}$ & $\Uplus[d]{}$ & $\Wedge[d]{}$ & $\Vee[d]{}$
+\end{tabular}
+\end{center}
+
+However, if you want something more elaborate, such as $\Disp\sum_{n\in\Z\exc\{0\}}$, it is easier to type it out normally.\\
+
+To create your own smart operator, add the following lines (for example) to the preamble:
+
+\begin{verbatim}
+        \DeclareMathOperator*{\TheOp}{Sym}
+        \CreateSmartLargeOperator{TheOp}{SmartOp}
+\end{verbatim}
+
+Then the command \verb!\SmartOp{2}! will produce $\operatorname*{Sym}_{n=2}^\infty$ in inline mode and $\Disp\operatorname*{Sym}_{n=2}^\infty$ in display mode.\\
+
+The first line defines \verb!\TheOp! as the operator denoted by Sym. The second line defines \verb!\SmartOp! as the smart version of this operator. Note that neither argument in the second line has a backslash, this is important. And of course, the operator only renders in math mode.
+
+\subsection{Miscellaneous}
+
+Some commands have been defined to convenience typing in \LaTeX. For example, the symbol $\R$ for real numbers is normally typed as \verb!\mathbb{R}!, which is rather cumbersome.
+
+\begin{center}
+    \begin{tabular}{*{5}{c}} % *{5}{c} is a shortcut for ccccc
+        $\A$ & $\As$ & $\Abar$ & $\Ab$ & $\Atil$ \\
+        \verb!\A! & \verb!\As! & \verb!\Abar! & \verb!\Ab! & \verb!\Atil!
+    \end{tabular}
+\end{center}
+
+The above commands have been defined similarly for all letters of the alphabet, with exceptions for pre-defined commands (e.g. \verb!\S!, which renders as \S).\\
+
+The \href{https://ctan.org/pkg/physics}{\texttt{physics}} package defines bracket-like commands (such as \verb!\abs! and \verb!\norm!) that automatically resize themselves according to their content. Here, we have defined the commands \verb!\floor! and \verb!\ceil! with the same features.
+
+\begin{multicols}{2}
+\begin{verbbox}[righthand width=3cm]
+$\floor{4.1}$
+\end{verbbox}
+\begin{verbbox}[righthand width=3cm]
+$\floor{x^2}$
+\end{verbbox}
+\begin{verbbox}[righthand width=3cm]
+$\floor{\dfrac{9}{5}}$
+\end{verbbox}
+\begin{verbbox}[righthand width=3cm]
+$\floor*{\dfrac{x^4}{y^7}}$
+\end{verbbox}
+%%%%%%%%%%%% %%%%%%%%%%%% %%%%%%%%%%%%
+\begin{verbbox}[righthand width=3cm]
+$\ceil{7.6}$
+\end{verbbox}
+\begin{verbbox}[righthand width=3cm]
+$\ceil{x^5}$
+\end{verbbox}
+\begin{verbbox}[righthand width=3cm]
+$\ceil{\dfrac{3}{7}}$
+\end{verbbox}
+\begin{verbbox}[righthand width=3cm]
+$\ceil*{\dfrac{x^5}{y^3}}$
+\end{verbbox}
+\end{multicols}
+
+The starred versions \verb!\floor*! and \verb!\ceil*! do not resize the brackets.\\
+
+The \texttt{physics} package also defines the identical commands \verb!\ip! and \verb!\braket! for inner products. Here, we have redefined \verb!\ip! to take only one argument (which may contain commas), while \verb!\braket! is left as it is. Both commands have automatic resizing, which is suppressed with their starred versions.
+
+\begin{multicols}{2}
+\begin{verbbox}
+$\ip{x,y}$
+\end{verbbox}
+%%%%%%%%%%%% %%%%%%%%%%%% %%%%%%%%%%%%
+\begin{verbbox}
+$\braket{x}{y}$
+\end{verbbox}
+\end{multicols}
+
+The \href{https://ctan.org/pkg/amsmath}{\texttt{amsmath}} package provides various macros for trigonometric functions, such as $\verb!\sin!$ for sin. The \texttt{physics} package overwrites these macros and provides additional ones, all with automatic resizing of brackets (unless the package is loaded with the option \texttt{notrig}). Here we have extended this list of macros to the following (all with automatic resizing):
+
+\begin{center}
+    \begin{tabular}{*{9}{c}} % *{9}{c} is a shortcut for ccccccccc
+        sin & asin & arcsin & sinh & asinh & arsinh & arcsinh & sen  & Re \\
+        cos & acos & arccos & cosh & acosh & arcosh & arccosh & tg   & Im \\
+        tan & atan & arctan & tanh & atanh & artanh & arctanh & ctg  & arg \\
+        cot & acot & arccot & coth & acoth & arcoth & arccoth & senh & Arg \\
+        sec & asec & arcsec & sech & asech & arsech & arcsech & tgh  & im \\
+        csc & acsc & arccsc & csch & acsch & arcsch & arccsch & ctgh & ker
+    \end{tabular}
+\end{center}
+
+\LaTeX\ provides a command \verb!\iff! which renders as $\Longleftrightarrow$ (identical to \verb!\Longleftrightarrow!). The \texttt{amsmath} package also provides two commands, \verb!\implies! which renders as $\Longrightarrow$ (identical to \verb!\Longrightarrow!), and \verb!\impliedby! which renders as $\Longleftarrow$ (identical to \verb!\Longleftarrow!).\\
+
+Here, these three commands are redefined to produce shorter sets of arrows, $\Leftrightarrow$, $\Rightarrow$ and $\Leftarrow$, identical to \verb!\Leftrightarrow!, \verb!\Rightarrow! and \verb!\Leftarrow! respectively. The original (long) arrows can be obtained using the starred versions \verb!\iff*!, \verb!\implies*! and \verb!\impliedby*!.\\
+
+Unlike the original commands, these can also be used in text mode, however the spacing needs to be accounted for depending on the text/math on either side of the arrows.
+
+\begin{verbbox}
+a\iff b\implies c\impliedby d
+\end{verbbox}
+
+\begin{verbbox}
+a\iff* b\implies* c\impliedby* d
+\end{verbbox}
+
+\begin{verbbox}
+$a\iff b\implies c\impliedby d$
+\end{verbbox}
+
+\begin{verbbox}
+$a\iff* b\implies* c\impliedby* d$
+\end{verbbox}
+
+\newpage
+\phantomsection % Required if hyperref is used
+\addcontentsline{toc}{section}{References} % Adding bibliography to table of contents
+\printbibliography % Print the bibliography
+
+\vspace{10pt}
+
+If you're struggling to find the \LaTeX\ command for a symbol, go to \Href{https://detexify.kirelabs.org/}{detexify.kirelabs.org}.\\
+
+If you're looking for ideas/inspiration for your \LaTeX\ documents, check out these websites:
+\begin{itemize}[leftmargin=0.5in]
+    \item \Href{https://castel.dev/}{castel.dev}
+    \item \Href{http://dec41.user.srcf.net/}{dec41.user.srcf.net}
+    \item \Href{https://www.youtube.com/@DrTrefor}{youtube.com/@DrTrefor}
+    \item \Href{https://coffeeintotheorems.com/}{coffeeintotheorems.com}
+    \item \Href{https://www.physicsread.com/}{physicsread.com}
+    \item \Href{https://www.latextemplates.com/}{latextemplates.com}
+    \item \Href{https://ralphs16.github.io/}{ralphs16.github.io}
+    \item \Href{https://github.com/vhbelvadi/}{github.com/vhbelvadi}
+\end{itemize}
+
+As well as \Href{https://tex.stackexchange.com/}{tex.stackexchange.com} and \Href{https://stackoverflow.com/}{stackoverflow.com}, where you can ask and answer questions.\\
+
+And of course, the Overleaf gallery: \Href{https://www.overleaf.com/latex/templates/}{overleaf.com/latex/templates}.\\
+
+\centering Have fun! \coolqed{0.32}

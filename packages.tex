@@ -1,0 +1,58 @@
+\usepackage[table,dvipsnames]{xcolor} % I need to put this here, if not: Option clash for package xcolor error
+
+%================== Required packages ===================
+
+\RequirePackage[french]{babel} %Langue du document
+\RequirePackage[utf8]{inputenc} %Caractères spéciaux
+\RequirePackage[section]{placeins}%Pour placement de section
+\RequirePackage[T1]{fontenc} %Quelques lettres qui sont pas inclus dans UTF-8
+\RequirePackage{mathtools} %Paquet pour des équations et symboles mathématiques
+% \RequirePackage{siunitx} %Pour écrire avec la notation scientifique (Ex.: \num{2e+9})
+\RequirePackage{float} %Pour placement d'images
+\RequirePackage{graphicx} %Paquet pour insérer des images
+\RequirePackage[justification=centering]{caption} %Pour les légendes centralisées
+\RequirePackage{subcaption}
+\RequirePackage{wallpaper}
+\RequirePackage{nomencl}
+\RequirePackage[left=2cm,right=2cm,top=1.5cm,bottom=3.5cm]{geometry} % Margins
+\RequirePackage{fancyhdr}
+
+
+
+
+
+%================== Packages ===================
+\usepackage{framed}
+\usepackage[normalem]{ulem}
+\usepackage{indentfirst}
+\usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage[nointegrals]{wasysym} % nointegrals prevents wasysym from overwriting integral symbols from LaTeX and amsmath
+\usepackage{bbm} % For extended bold and blackboard bold characters
+\usepackage[italicdiff]{physics} % italicdiff causes derivatives to be rendered with italic d's instead of upright d's
+\usepackage{xparse}
+\usepackage{xstring}
+\usepackage{awesomebox}
+\usepackage{lipsum}
+\usepackage{algorithm}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage{algpseudocode}
+\usepackage{rotating}
+% \usepackage{pifont} % For unusual symbols
+% \usepackage{mathdots} % For unusual combinations of dots
+\usepackage{wrapfig}
+\usepackage{lmodern,mathrsfs}
+\usepackage[inline,shortlabels]{enumitem}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz,tikz-3dplot,tikz-cd,tkz-tab,tkz-euclide,pgf,pgfplots}
+% \usepackage{comment} % For commenting large blocks of text and math efficiently
+% \usepackage{fancyvrb} % For custom verbatim environments
+\usepackage{multicol}
+\usepackage[bottom,multiple]{footmisc} % Ensures footnotes are at the bottom of the page, and separates footnotes by a comma if they are adjacent
+\usepackage[backend=biber,style=numeric]{biblatex}
+\usepackage[colorlinks,linkcolor=.,citecolor=blue,urlcolor=violet]{hyperref}
+\usepackage[nameinlink]{cleveref} % nameinlink ensures that the entire element is clickable in the pdf, not just the number
+\usepackage[explicit]{titlesec}
+\usepackage[outputdir=build, newfloat]{minted}
+\usepackage{csquotes} % Must be loaded AFTER inputenc
+\usepackage{chngcntr}
+\usepackage{stmaryrd}
