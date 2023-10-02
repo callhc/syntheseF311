@@ -253,12 +253,195 @@ Il existe plusieurs types d'agents qui répondent à des environnements plus com
     \end{itemize}
 \end{example}
 
-
-
 % subsection Probleme de recherches (end)
 
-% subsection  (end)
+\subsection{Graphe d'espace d'état} % (fold)
+\label{sub:graphe_d_espace_d_etat}
 
+\begin{definition}{Graphe d'espace d'état}{stategraph}
+    Un graphe d'espace d'état est un graphe qui représente les états et les actions possibles.
+    \begin{itemize}
+        \item \textbf{Noeuds}: les états
+        \item \textbf{Arêtes}: les actions
+    \end{itemize} 
+    L'état initial est le noeud racine et l'état final est un noeud (ou plusieurs ?).
+\end{definition}
+
+\begin{warning}
+    Dans ce genre de graphe, chaque état n'est représenté qu'\textbf{une seule fois}.
+\end{warning}
+
+\begin{remark}\leavevmode
+    Il est fortement possible de ne pas pouvoir représenter un problème de recherche par un graphe d'espace d'état car 
+    il y a \textbf{trop d'états} ou que les états sont \textbf{continus}.
+\end{remark}
+
+% subsection Graphe d'espace d'etat (end)
+
+\subsection{Arbres de Recherches} % (fold)
+\label{sub:arbres_de_recherches}
+
+\begin{definition}{Arbre de Recherche}{searchtree}
+    Un arbre de recherche est un arbre qui représente les états et les actions possibles.
+    \begin{itemize}
+        \item \textbf{Noeuds}: les états, plans pour arriver à ces états
+        \item \textbf{Arêtes}: les actions
+        \item \textbf{Enfants}: les états suivants (\textit{succeseurs})
+    \end{itemize} 
+    L'état initial est le noeud racine et l'état final est un noeud (ou plusieurs ?). 
+    Les noeuds peuvent être représentés plusieurs fois, (\textbf{il est donc plus grand qu'un graphe d'espace d'état.})
+\end{definition}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.75\textwidth]{./pictures/romst.png}
+    \end{center}
+    \caption{Arbre de recherche de la figure \ref{fig:romania}}\label{fig:romst}
+\end{figure}
+
+\subsubsection{Recherche dans un arbre de recherche} % (fold)
+\label{sec:recherche_dans_un_arbre_de_recherche}
+
+\begin{algorithm}[H]
+    \floatname{algorithm}{Recherche dans un Arbre}
+    \caption{Algorithme de recherche}\label{alg:stsearch}
+    \begin{algorithmic}
+        \Function{Tree-Search}{problème, stratégie} 
+        \State initialise un noeud avec l'état initial du problème
+
+        \Loop{
+            \If{il ne peut plus y avoir d'état à explorer}
+                \State \Return Erreur
+            \EndIf
+            \State choisis un noeud non exploré selon la stratégie
+            \If{le noeud est l'état final}
+                \State \Return le plan qui mène à l'état final
+            \Else
+                \State Développe le noeud et ajoute ses enfants à l'arbre
+            \EndIf
+        }
+        \EndLoop
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{remarks}\leavevmode
+\begin{enumerate}
+    \item La frontière est l'ensemble des noeuds non explorés de l'arbre
+    \item Pour développer un noeud de la frontiere, on le retire de la frontière et on l'ajoute à l'ensemble des noeuds explorés
+        ses enfants sont ajoutés à la frontière
+\end{enumerate}
+\end{remarks}
+
+% subsubsection Recherche dans un arbre de recherche (end)
+
+% subsection Arbres de Recherches (end)
+
+
+\subsection{DFS} % (fold)
+\label{sub:dfs}
+
+\begin{definition}{DFS}{dfs}
+    La recherche en profondeur (\textbf{DFS}) est une stratégie de recherche qui explore l'arbre en allant le plus loin possible dans une branche avant de revenir en arrière. 
+    \begin{itemize}
+        \item \textbf{Frontière}: une pile (LIFO)
+        \item \textbf{Stratégie}: on choisit le noeud le plus profond de la frontière
+    \end{itemize} 
+\end{definition}
+% subsection DFS (end)
+
+\subsection{BFS} % (fold) 
+\label{sub:bfs} 
+
+\begin{definition}{BFS}{bfs}
+    La recherche en largeur (\textbf{BFS}) est une stratégie de recherche qui explore l'arbre en allant le plus large possible dans une branche avant de revenir en arrière. 
+    \begin{itemize}
+        \item \textbf{Frontière}: une file (FIFO)
+        \item \textbf{Stratégie}: on choisit le noeud le moins profond de la frontière
+    \end{itemize} 
+\end{definition} 
+% subsection BFS (end)
+
+\textbf{DFS} est meilleur que \textbf{BFS} dans les cas suivant: 
+\begin{itemize}
+    \item Si il y a des limitations de mémoire 
+\end{itemize}
+
+\textbf{BFS} est meilleur que \textbf{DFS} dans les cas suivant: 
+\begin{itemize}
+    \item Si on veut trouver la solution la plus courte
+\end{itemize}
+
+\subsection{Iterative deepening} % (fold)
+\label{sub:iterative_deepening}
+\begin{note}
+    L'idée est d'avoir les avantages mémoire de \textbf{DFS} et la solution optimale de \textbf{BFS}
+\end{note}
+
+\begin{definition}{Iterative deepening}{iterdeep}
+
+    L'exploration itérative en profondeur (\textbf{Iterative deepening}) est une stratégie de 
+    recherche qui explore l'arbre en faisant une recherche en profondeur avec une limite de profondeur de 
+    1, puis 2, puis 3, etc. jusqu'à ce que la solution soit trouvée.
+
+
+    % TODO: Se renseigner sur ça 
+    % L'exploration itérative en profondeur (\textbf{Iterative deepening}) est une stratégie de recherche qui explore l'arbre en allant le plus loin possible dans une branche avant de revenir en arrière. 
+    % \begin{itemize}
+    %     \item \textbf{Frontière}: une pile (LIFO)
+    %     \item \textbf{Stratégie}: on choisit le noeud le plus profond de la frontière
+    % \end{itemize} 
+\end{definition}
+
+% subsection Iterative deepening (end)
+
+
+\subsection{UCS} % (fold) 
+\label{sub:ucs} 
+
+\begin{definition}{UCS}{ucs}
+    La recherche par coût uniforme (\textbf{UCS}) est une stratégie de recherche qui explore l'arbre en allant le plus loin possible dans une branche avant de revenir en arrière. 
+    \begin{itemize}
+        \item \textbf{Frontière}: une file de priorité
+        \item \textbf{Stratégie}: on choisit le noeud ayant le plus petit coût de la frontière
+    \end{itemize} 
+\end{definition} 
+
+
+
+
+Pour ananlyser un algorithme, on va utilser ces différentes propriétés:
+\begin{itemize}
+    \item \textbf{Complet}: l'algorithme trouve toujours une solution si elle existe
+    \item \textbf{Optimal}: l'algorithme trouve toujours la solution optimale (avec le plus petit coût)
+    \item \textbf{Complexité en temps}: Combien de temps l'algorithme prend pour trouver une solution
+    \item \textbf{Complexité en espace}: Combien de mémoire l'algorithme prend pour trouver une solution
+\end{itemize}
+
+\begin{table}[H]
+    \caption{Comparaison stratégie d'exploration}\label{tab:searchcomp}
+    \begin{center}
+        \begin{tabular}[c]{|l||l|l|l|l|}
+            \hline
+            \multicolumn{1}{|c|}{\textbf{Critère}} & 
+            \multicolumn{1}{|c|}{\textbf{Largeur}} &
+            \multicolumn{1}{c|}{\textbf{Cout uniforme}} &
+            \multicolumn{1}{c|}{\textbf{Profondeur}} &
+            \multicolumn{1}{c|}{\textbf{Profondeur itérative}} \\
+
+            \hline
+            \textbf{Complet}& Oui & Oui & Non & Oui \\ 
+            \hline
+            \textbf{Optimal}& Oui & Oui & Non & Oui\\ 
+            \hline
+            \textbf{Temps}& $O(b^d)$ & $O(b^{\frac{C^*}{\epsilon}})$ & $O(b^m)$ & $O(b^d)$\\ 
+            \hline
+            \textbf{Espace}& $O(b^d)$ & $O(b^{\frac{C^*}{\epsilon}})$ & $O(bm)$ & $O(bd)\\
+
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
 
 % section Recherche (end)
 
