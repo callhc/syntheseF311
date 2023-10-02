@@ -1,1 +1,9 @@
-
+*.aux
+*.out 
+*.log 
+*.toc 
+*.nlo
+*.synctex.gz
+*.listing
+build/
+.DS_Store
