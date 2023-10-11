@@ -201,13 +201,37 @@ Il existe plusieurs types d'agents qui répondent à des environnements plus com
 \end{itemize}
 % section Introduction (end)
 
-\section{Recherche} % (fold)
+\section{Recherche Non-Informée} % (fold)
 \label{sec:recherche}
 
-\begin{definition}{Agent de Plannification}{planningagent}
-    Un agent de plannification font des \textbf{hypothèses} sur les conséquences des actions entreprises
-    et utilise un \textbf{modèle} de l'environnement pour trouver un plan qui atteint son objectif.
+\begin{definition}{Recherche non-informée}{uninformed-search}
+    La recherche \textbf{non-informée} est une stratégie de recherche qui n'utilise \textbf{pas}
+    d'information sur l'état de l'environnement afin de le \textbf{guider} pour trouver une solution.
+    Elle explore simplement l'espace de recherche de manière systèmatique. En utilisant souvent 
+    des \textit{algorithmes} comme \textbf{DFS}, \textbf{BFS}.
 \end{definition}
+
+\begin{remark}\leavevmode
+    La recherche non-informée est utilisée quand on ne connait pas l'état de l'environnement. 
+    Lorsqu'on ne peut quantifier la qualité d'un état en utilisant des \textbf{information heuristiques}
+\end{remark}
+
+\begin{definition}{Agent de Plannification}{planningagent}
+    Les agents de plannification font des \textbf{hypothèses} sur les conséquences des actions entreprises
+    et utilisent un \textbf{modèle} de l'environnement pour trouver un plan qui atteint son objectif.
+\end{definition}
+
+\underline{\textbf{Résolution de problèmes par la recherches}}:
+\begin{enumerate}
+    \item \textbf{Formulation de l'objectif}: L'agent doit avoir un objectif afin 
+        de pouvoir organiser son comportement. Ca permet de limiter l'espace de recherche (\textit{actions entreprises})
+    \item \textbf{Formulation du problème}: L'agent doit avoir un moyen de représenter les actions et les états 
+        afin de pouvoir les manipuler
+    \item \textbf{Recherche de la solution}: Avant d'agir dans le monde réel, l'agent  fait  une 
+        simulation de séquences d'actions dans son modèle de l'environnement jusqu'à trouver un séquence 
+        qui mène à l'objectif. C'est  la \textit{solution}
+    \item \textbf{Exécution de la solution}: L'agent exécute la séquence d'actions dans le monde réel
+\end{enumerate}
 
 \begin{note}
     Un plan est une séquence d'actions qui mène à l'objectif.
@@ -327,15 +351,25 @@ Il existe plusieurs types d'agents qui répondent à des environnements plus com
 
 \begin{remarks}\leavevmode
 \begin{enumerate}
-    \item La frontière est l'ensemble des noeuds non explorés de l'arbre
+    \item La frontière est l'ensemble des noeuds construits non explorés de l'arbre
     \item Pour développer un noeud de la frontiere, on le retire de la frontière et on l'ajoute à l'ensemble des noeuds explorés
         ses enfants sont ajoutés à la frontière
+    \item La recherche dans un graphes est similaire à la recherche dans un arbre sauf qu'on doit vérifier si un noeud a déjà été visité
+        avant de l'ajouter à la frontière
 \end{enumerate}
 \end{remarks}
 
 % subsubsection Recherche dans un arbre de recherche (end)
 
 % subsection Arbres de Recherches (end)
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.95\textwidth]{./pictures/bfsschema.jpg}
+    \end{center}
+    \caption{Sens d'éxécution BFS et DFS}\label{fig:bfsschema}
+\end{figure}
+
 
 
 \subsection{DFS} % (fold)
@@ -393,6 +427,11 @@ Il existe plusieurs types d'agents qui répondent à des environnements plus com
     % \end{itemize} 
 \end{definition}
 
+\begin{remark}\leavevmode
+    Même si cette algorithme visite plusieurs fois les mêmes noeuds, ça n'a pas vraiment d'impact
+    car le nombre de noeuds est réduit (car on mise de le trouver avant d'atteindre la limite de profondeur)
+\end{remark}
+
 % subsection Iterative deepening (end)
 
 
@@ -436,7 +475,7 @@ Pour ananlyser un algorithme, on va utilser ces différentes propriétés:
             \hline
             \textbf{Temps}& $O(b^d)$ & $O(b^{\frac{C^*}{\epsilon}})$ & $O(b^m)$ & $O(b^d)$\\ 
             \hline
-            \textbf{Espace}& $O(b^d)$ & $O(b^{\frac{C^*}{\epsilon}})$ & $O(bm)$ & $O(bd)\\
+            \textbf{Espace}& $O(b^d)$ & $O(b^{\frac{C^*}{\epsilon}})$ & $O(bm)$ & $O(bd)$\\
 
             \hline
         \end{tabular}
@@ -444,6 +483,180 @@ Pour ananlyser un algorithme, on va utilser ces différentes propriétés:
 \end{table}
 
 % section Recherche (end)
+
+\newpage
+
+\section{Recherche Informée} % (fold) 
+\label{sec:recherche_informee} 
+
+\begin{definition}{Recherche Informée}{informedsearch}
+
+    La recherche \textbf{informée} est une stratégie de recherche qui utilise \textbf{des informations} sur l'état de l'environnement afin de le \textbf{guider} pour trouver une solution.
+    Elle explore l'espace de recherche de manière \textbf{intelligente} gràce à des \textbf{heuristiques}. 
+    Ces heuristiques permettent de \textbf{quantifier} la \textbf{qualité} d'un état et donc 
+    de guider la recherche vers les états les plus prometteurs.
+\end{definition}
+
+\begin{remark}\leavevmode
+    La performance de ces algorithmes dépendent de la qualité de l'heuristique utilisée.
+\end{remark}
+
+\begin{definition}{Heuristique}{heuristic}
+    Une heuristique est une fonction qui permet d'estimer à quel point un état est \textbf{proche}
+    de l'état final. Elles sont designées pour des problèmes spécifiques.
+\end{definition}
+
+\begin{examples}\leavevmode
+    \begin{enumerate}
+        \item \textbf{Distance Euclidéenne}: la distance entre deux points 
+            en ligne droite 
+        \item \textbf{Distance de Manhattan}: la distance entre deux points 
+            en ligne droite mais en ne pouvant se déplacer que sur les axes 
+            (pas en diagonale) 
+    \end{enumerate}
+\end{examples}
+
+
+\subsection{Greedy Best-First Search} % (fold)
+\label{sub:greedy_best_first_search}
+
+\begin{definition}{Greedy Best-First Search}{greedybestfirstsearch}
+    La recherche gloutonne (\textbf{Greedy Best-First Search}) est une stratégie de recherche qui explore l'arbre en choisissant le noeud qui semble le plus prometteur.
+    \begin{itemize}
+        \item \textbf{Frontière}: une file de priorité
+        \item \textbf{Stratégie}: on choisit le noeud ayant la plus petite heuristique de la frontière
+    \end{itemize} 
+\end{definition}
+
+\begin{figure}[H]
+  \centering
+  \scalebox{0.65}{
+  \begin{minipage}[b]{0.30\textwidth}
+    \centering
+    \begin{tabular}[c]{|ll|ll|}
+        \hline
+        % \multicolumn{1}{c|}{\textbf{}} & 
+        % \multicolumn{1}{c}{\textbf{}} \\
+        % \hline
+        \textbf{Arad} & 366 & \textbf{Mehadia} & 241 \\ 
+        \textbf{Bucharest} & 0 & \textbf{Neamt} & 234 \\ 
+        \textbf{Craiova} & 160 & \textbf{Oradea} & 380 \\ 
+        \textbf{Dobreta} & 242 & \textbf{Pitesti} & 100 \\ 
+        \textbf{Eforie} & 161 & \textbf{Rimnicu Vilcea} & 193 \\ 
+        \textbf{Fagaras} & 176 & \textbf{Sibiu} & 253 \\ 
+        \textbf{Giurgiu} & 77 & \textbf{Timisoara} & 329 \\ 
+        \textbf{Hirsova} & 151 & \textbf{Urziceni} & 80 \\ 
+        \textbf{Iasi} & 226 & \textbf{Vaslui} & 199 \\ 
+        \textbf{Lugoj} & 244 & \textbf{Zerind} & 374 \\ 
+        \hline
+    \end{tabular}
+
+    \caption{Tableau de valeure d'heuristique}
+    \label{tab:heuristics}
+  \end{minipage}
+   }
+  \hfill
+  \scalebox{0.9}{
+  \begin{minipage}{0.70\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{./pictures/greedy.png}
+    \caption{Exécution de l'algo greedy}
+    \label{fig:greedy}
+  \end{minipage}
+    }
+\end{figure}
+
+
+\begin{remarks}\leavevmode
+    \begin{enumerate}
+        \item \textbf{Complet}: Non, peut aller dans des profondeurs infinies
+        \item \textbf{Optimal}: Non
+        \item \textbf{Complexité en temps}: $O(b^m)$
+        \item \textbf{Complexité en espace}: $O(b^m)$
+        \item Il est en général meilleur que \textbf{DFS}
+    \end{enumerate}
+\end{remarks}
+
+% subsection Greedy Best-First Search (end)
+
+\subsection{A*} % (fold)
+\label{sub:a_}
+
+\begin{definition}{A*}{astar}
+    L'algorithme \textbf{A*} est une stratégie de recherche qui explore l'arbre en choisissant le noeud qui semble le plus prometteur.
+    \begin{itemize}
+        \item \textbf{Frontière}: une file de priorité
+        \item \textbf{Stratégie}: on choisit le noeud ayant le plus petit coût de la frontière
+    \end{itemize} 
+    La fonction d'évaluation est la suivante: 
+    \begin{math}
+        f(n) = g(n) + h(n)
+    \end{math} 
+    où $g(n)$ est le coût pour atteindre le noeud $n$ depuis la racine et 
+    $h(n)$ est le cout du noeud $n$ pour aller jusqu'au but.
+\end{definition}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.65\textwidth]{./pictures/astar.png}
+    \end{center}
+    \caption{Exécution de l'algo A*}\label{fig:astar}
+\end{figure}
+
+\begin{remarks}\leavevmode
+    \begin{enumerate}
+        \item \textbf{Complet}: Oui
+        \item \textbf{Optimal}: Oui si $h(n)$ est admissible
+        \item \textbf{Complexité en temps}: $O(b^d)$
+        \item \textbf{Complexité en espace}: $O(b^d)$
+    \end{enumerate}
+\end{remarks}
+% subsection A* (end)
+
+\subsection{Creer des Heuristiques admissibles} % (fold)
+\label{sub:creer_des_heuristiques_admissibles}
+
+\begin{definition}{Admissible}{admissible}
+    Une heuristique est admissible si elle ne surestime jamais le coût pour atteindre l'état final. 
+    \begin{math}
+        h(n) \leq h^*(n) 
+    \end{math} 
+    où $h^*(n)$ est le coût réel pour atteindre l'état final. 
+    C'est une fonction \textbf{optimiste}
+\end{definition}
+
+\begin{definition}{Cohérent}{consitent}
+    Une \textbf{heuristique} est \textbf{cohérente} si, pour chaque noeud $n$ et un successeur $n'$ de $n$ généré par une action $a$,
+    le coût estimé pour atteindre l'état final depuis $n$ est inférieur ou égal au coût de l'action $a$ plus le coût estimé pour atteindre l'état final depuis $n'$. 
+    \begin{math}
+        h(n) \leq c(n, a, n') + h(n') 
+    \end{math} 
+    où $c(n, a, n')$ est le coût de l'action $a$ pour aller de $n$ à $n'$. 
+\end{definition}
+
+\begin{remark}\leavevmode
+    Une heuristique cohérente est toujours admissible. 
+\end{remark}
+
+\begin{note}
+    Lorsqu'on compare 2 heuristiques, on peut dire que l'heuristique $h_1$ est meilleure que $h_2$ si 
+    \begin{math}
+        h_1(n) \leq h_2(n) \forall n 
+    \end{math}
+\end{note}
+
+Afin de créer une heuristique admissible, on peut utiliser les méthodes suivantes: 
+\begin{itemize}
+    \item \textbf{Relaxation}: on simplifie le problème en enlevant des contraintes
+    \item \textbf{Décomposition}: on décompose le problème en sous-problèmes qui sont plus facile à résoudre
+    \item \textbf{Combinaison}: on combine plusieurs heuristiques 
+\end{itemize}
+
+Il est aussi possible de stocker les valeures réelles dans une \textbf{base de donnée} 
+et de les utiliser pour calculer l'heuristique (qui est dcp dans la bdd).
+% subsection Creer des Heuristiques admissibles (end)
+
+% section Recherche  Informée(end)
 
 
 
