@@ -164,7 +164,7 @@ qui ne sont pas des états terminaux pour estimer leur utilité.
             \floatname{algorithm}{$\alpha-\beta$ pruning}
             \caption{Algorithme $\alpha-\beta$ pruning}\label{alg:alphabeta}
             \begin{algorithmic}
-                \Function{Minimax-Search}{game, state} 
+                \Function{Alpha-Beta-Search}{game, state} 
                 \State player $\leftarrow$ game.\Call{To-Move}{state}
                 \State value, action $\leftarrow$ \Call{Max-Value}{game, state, $-\infty$, $+\infty$}
                 \State \Return action
@@ -215,3 +215,17 @@ qui ne sont pas des états terminaux pour estimer leur utilité.
 }
 
 % subsection Alpha-Beta pruning (end)
+
+\subsection{Expectimax} % (fold)
+\label{sub:expectimax}
+% TODO:Faire cette section
+
+% subsection Expectimax (end)
+
+\subsection{Monte Carlo} % (fold)
+\label{sub:monte_carlo}
+% TODO: Faire cette section
+
+% subsection Monte Carlo (end)
+
+

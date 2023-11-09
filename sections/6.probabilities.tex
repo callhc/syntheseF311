@@ -1,0 +1,170 @@
+Les raisonnements probabilistes en \textbf{Intelligence Artificielle} sont basés sur la théorie 
+des probabilités et permettent de modéliser des situations 
+où l'on ne peut pas prédire avec certitude le résultat d'une action (\textit{environnements non-déterministes}).
+
+\subsection{Quelques définitions} % (fold)
+\label{sub:quelques_definitions}
+
+
+\begin{definition}{Événement élémentaire}{evenementelementaire}
+    Un état possible de l'environnement. 
+    Il est souvent noté $\omega$.
+\end{definition}
+
+\begin{definition}{Univers}{univers}
+    L'ensemble de tous les événements élémentaires possible.
+    Il est souvent noté $\Omega$.
+\end{definition}
+
+\begin{definition}{Variable aléatoire}{varaleatoire}
+    Une \textbf{variable aléatoire} est une fonction qui associe à chaque événement élémentaire 
+    d'un espace probabilisé un nombre réel. 
+    On note $A$ une variable aléatoire et $x$ une valeur prise par $A$. 
+    On note $P(A=x)$ la probabilité que $A$ prenne la valeur $x$. 
+    On note $P(A)$ la loi de probabilité de $A$. 
+\end{definition}
+
+\begin{remark}\leavevmode
+    C'est une manière de quantifier de manière numérique les résultats d'une expérience aléatoire.
+
+    Fonction qui prend en entrée un événeement élémentaire et qui renvoie un nombre réel (quantification).
+\end{remark}
+
+% subsection Quelques definitions (end)
+
+\subsection{Rappel proba} % (fold)
+\label{sub:rappel_proba}
+
+\begin{definition}{Probabilité Conjointes}{probconj}
+    La probabilité conjointe de deux variables aléatoires $A$ et $B$ est la probabilité de l'événement 
+    où $A$ prend la valeur $x$ et $B$ prend la valeur $y$.
+    \begin{align}
+        P(A=x , B=y) &= P(A=x \cap B=y) \\ 
+                    &= P(A=x | B=y)P(B=y) \\ 
+                    &= P(B=y | A=x)P(A=x)
+    \end{align}
+\end{definition}
+
+\begin{example}\leavevmode
+    Rajouter des exs ?
+\end{example}
+
+\begin{definition}{Probabilité d'une disjonction}{probdisonction}
+    La probabilité d'une disjonction de deux variables aléatoires $A$ et $B$ est la probabilité de l'événement 
+    où $A$ prend la valeur $x$ ou $B$ prend la valeur $y$.
+    \begin{equation}
+        P(A=x \cup B=y) = P(A=x) + P(B=y) - P(A=x\cap B=y)
+    \end{equation}
+    La sousstraction est nécessaire pour éviter de compter deux fois la probabilité de l'intersection.
+\end{definition}
+
+\newpage
+
+
+\begin{definition}{Probabilité Marginale}{probmarginale}
+    La probabilité marginale d'une variable aléatoire $A$ est la probabilité de l'événement 
+    où $A$ prend la valeur $x$.
+    \begin{equation}
+        P(A=x) = \sum_{y \in B} P(A=x \cap B=y)
+    \end{equation} 
+    Où $B$ prend toutes ses valeurs possibles.
+    
+\end{definition}
+\begin{remark}\leavevmode
+    C'est la probabilité sur un sous-ensemble de variables aléatoires.
+\end{remark}
+
+
+\begin{definition}{Probabilité Conditionnelle}{probconditionnelle}
+    La probabilité conditionnelle de deux variables aléatoires $A$ et $B$ est la probabilité de l'événement 
+    où $A$ prend la valeur $x$ sachant que $B$ prend la valeur $y$.
+    \begin{equation}
+        P(A=x | B=y) = \frac{P(A=x\cap B=y)}{P(B=y)}
+    \end{equation} 
+\end{definition}
+
+\begin{definition}{Distribution de probabilité}{distprob}
+    Une distribution de probabilité est une fonction qui associe à chaque événement élémentaire 
+    d'un espace probabilisé un nombre réel positif. 
+    La somme de toutes les probabilités doit être égale à 1.
+    \begin{equation}
+        \sum_{\omega \in \Omega} P(\omega) = 1
+    \end{equation}
+
+\end{definition}
+
+Une distribution conditionnelle peut être vue comme une distribution \textbf{renomalisée} afin de 
+respecter la contrainte de somme à 1.
+Pour renormaliser une distribution, il suffit de diviser chaque probabilité par la somme de toutes les probabilités.
+Cette constante de normalisation est appelée \textbf{facteur de normalisation} et est notée $\alpha$.
+
+\begin{remark}
+    Une distribution de probabilité est une variable aléatoire. 
+    On peut donc parler de probabilité conjointe, marginale, conditionnelle, etc. 
+    sur une distribution de probabilité. 
+\end{remark}
+
+\begin{theorem}{Bayes}{bayes}
+    Ce théorème permet de calculer une probabilité conditionnelle à partir de la probabilité conditionnelle inverse. 
+    \textit{inversement du conditionnement}
+    \begin{equation}
+        P(A|B) = \frac{P(A)P(B|A)}{P(B)}
+    \end{equation}
+    $P(A)$ est appelé la probabilité \textbf{a priori} de $A$. 
+    $P(A|B)$ est appelé la probabilité \textbf{a posteriori} de $A$.
+    A posteriori = après avoir observé $B$.
+\end{theorem}
+
+\begin{theorem}{Multiplication}{multiplication}
+    Ce théorème permet de calculer une probabilité conjointe à partir de probabilités conditionnelles.
+    \begin{equation}
+        P(A\cap B) = P(A|B)P(B)
+    \end{equation} 
+\end{theorem}
+
+
+\newpage
+
+
+\begin{theorem}{Chainage}{chainage}
+    Ce théorème permet de calculer une probabilité conjointe à partir de probabilités conditionnelles.
+    \begin{align}
+        P(A_1\cap A_2 \cap ... \cap A_n) &= P(A_1)P(A_2|A_1)P(A_3|A_1\cap A_2)...P(A_n|A_1\cap A_2 \cap ... \cap A_{n-1})\\
+        &= \prod_{i=1}^{n} P(A_i|\bigcap_{j=1}^{i-1} A_j)
+    \end{align}
+    Ce théorème est une généralisation du théorème de multiplication.
+\end{theorem}
+\begin{remark}\leavevmode
+    C'est la probabilité d'une variable aléatoire sachant que toutes les autres précédentes ont eu lieu.
+\end{remark}
+
+
+% subsection Rappel proba (end)
+\subsection{Indépendance} % (fold)
+\label{sub:independance}
+
+
+\begin{definition}{Indépendance}{independance}
+    Deux variables aléatoires $A$ et $B$ sont indépendantes si et seulement si 
+    \begin{itemize}[label=\textbullet]
+        \item $P(A | B) = P(A)$  (savoir $B$ ne change pas la probabilité de $A$) ou
+        \item $P(B | A) = P(B)$ (savoir $A$ ne change pas la probabilité de $B$) ou
+        \item $P(A \cap B) = P(A)P(B)$ (il n'y a pas d'impact mutuel)
+    \end{itemize}
+    Elle permet de simplifier les calculs de probabilités conjointes.
+\end{definition}
+
+\begin{definition}{Indépendance Conditionnelle}{independanceconditionnelle}
+    Deux variables aléatoires $A$ et $B$ sont indépendantes conditionnellement à une variable aléatoire $C$ si et seulement si 
+    \begin{itemize}
+        \item $P(A | B \cap C) = P(A | C)$ ou 
+        \item $P(A \cap B | C) = P(A | C)P(B | C)$
+    \end{itemize}
+    Dans ce cas, A et B sont indépendantes sachant C. C'est à dire que l'information sur la réalisation de C n'affecte pas la relation entre A et B
+\end{definition}
+\begin{remark}\leavevmode
+    Si il n'y avait pas de condition et que $A$ et $B$ sont indépendantes, 
+    on aurait $P(A | B) = P(A)$. Sauf que maintenant on a une condition $C$ qui est réalisée, et elle ne peut être supprimée
+\end{remark}
+
+% subsection Independance (end)
