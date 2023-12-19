@@ -41,7 +41,8 @@
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.7\textwidth]{./pictures/agent_func.png}
-        \caption{Représentation fonction agent dans le jeu Tetris}
+        \caption{Représentation d'une fonction agent dans le jeu Tetris. 
+        En fonction d'une certaine situation dans le jeu, l'agent va choisir une action.}
         \label{fig:agent} 
     \end{figure}
 \end{example}
@@ -51,14 +52,15 @@
     afin d'\underline{implémenter} la fonction agent $f$.
 \end{definition}
 \begin{remark}\leavevmode
-    Les machines dans le monde réel sont \textbf{imparfaites} et \textbf{limitées} en temps et en mémoire.
+    Les machines dans le monde réel sont \textbf{imparfaites} et \textbf{limitées} en vitesse d'exécution et en mémoire.
 \end{remark}
 
 \begin{figure}[H]
     \begin{center}
         \includegraphics[width=0.25\textwidth]{./pictures/vac_state.png}
     \end{center}
-    \caption{Etat de l'environnement de l'aspirateur}\label{fig:vac_state}
+    \caption{Etat de l'environnement de l'aspirateur. Localisation de l'aspirateur et si un case contien de la poussière ou non}
+    \label{fig:vac_state}
 \end{figure}
 
 % WARNING: Pas sur que ce soit utile/bonne façon de faire
@@ -100,13 +102,21 @@
 Pour que notre agent soit bien rationnel, il nous faut une manière de \textbf{mesurer} la \textbf{performance}
 de celui-ci. Pour cela, nous allons définir une \textbf{fonction de performance} qui va mesurer la qualité des actions de l'agent.
 
+\warningbox{    
+    Il est important de bien définir la fonction de performance car elle va déterminer le comportement de l'agent. 
+    Il se peut qu'en fonction de la manière dont vous accordé des récompenses à votre agent, celui-ci ne se comporte pas comme vous le souhaitez.
+    Il pourrait par exemple décider de ne rien faire et de rester immobile pour maximiser son utilité attendue. 
+    Ou bien de faire tout le temps la même action car celle-ci lui rapporte le plus de points.
+}
+
+
 \begin{example}\leavevmode
-    On peut lui faire gagner des points ou bien lui en retirer en fonction d'une action
+    On peut lui faire gagner des points ou bien lui en retirer en fonction d'une action. Comme pour éduquer un animal.
 \end{example}
 De cette manière, l'agent va savoir quelles actions lui permettent de \textbf{maximiser} son utilité attendue.
 
-Afin de bien déterminer un environnement, les particularité de notre agents, il nous faut 
-\textbf{avant toute chose} définir \textbf{\textcolor{red}{PEAS}}
+Afin de bien déterminer un environnement, les particularité de notre agents, il nous faut, 
+\textbf{avant toute chose}, définir \textbf{\textcolor{red}{PEAS}}
 
 \begin{definition}{PEAS}{peas}
     \begin{itemize}
@@ -132,10 +142,8 @@ Afin de bien déterminer un environnement, les particularité de notre agents, i
         \item \textbf{Actuateurs}: Haut, Bas, Gauche, Droite
         \item \textbf{Capteurs}: L'état entier visible
     \end{itemize}
-
-
-
 \end{example}
+
 
 \begin{definition}{Types d'environnement}{envtype}
     Il y a plusieur type d'environnement:
@@ -144,7 +152,7 @@ Afin de bien déterminer un environnement, les particularité de notre agents, i
         \item \textbf{Mono-agent}: un seul agent
         \item \textbf{Multi-agent}: plusieurs agents qui maximisent leur \textbf{propre} tâche (coop ou concurentiel)
         \item \textbf{Déterministe}: l'état de l'env est déterminé \textbf{seulement} par les actions de l'agent
-        \item \textbf{Stochastique}: l'environnement est non déterministe
+        \item \textbf{Stochastique}: l'environnement est non déterministe. L'état de l'env est déterminé par les actions de l'agent et par des facteurs aléatoires
         \item \textbf{Épisodique}: les actions de l'agent n'affectent pas les actions futures
         \item \textbf{Séquentiel}: les actions de l'agent affectent les actions futures
         \item \textbf{Dynamique}: l'environnement peut changer pendant que l'agent réfléchit
