@@ -8,7 +8,7 @@
 
 \begin{remark}\leavevmode
     La recherche non-informée est utilisée quand on ne connait pas l'état de l'environnement. 
-    Lorsqu'on ne peut quantifier la qualité d'un état en utilisant des \textbf{information heuristiques}
+    Lorsqu'on ne peut quantifier la qualité d'un état en utilisant des \textbf{informations heuristiques}
 \end{remark}
 
 \begin{definition}{Agent de Plannification}{planningagent}
@@ -16,7 +16,7 @@
     et utilisent un \textbf{modèle} de l'environnement pour trouver un plan qui atteint son objectif.
 \end{definition}
 
-\underline{\textbf{Résolution de problèmes par la recherches}}:
+\underline{\textbf{Résolution de problèmes par la recherche}}:
 \begin{enumerate}
     \item \textbf{Formulation de l'objectif}: L'agent doit avoir un objectif afin 
         de pouvoir organiser son comportement. Ca permet de limiter l'espace de recherche (\textit{actions entreprises})
@@ -43,9 +43,11 @@
         % \item \textbf{Actions}: les actions possibles
         % \item \textbf{Transition}: la fonction qui définit les conséquences des actions
         \item \textbf{Actions $A(s)$}: les actions possibles dans l'état $s$
-        \item \textbf{Modèle de Transition $Result(s, a)$}: la fonction qui définit les conséquences des actions
-        \item \textbf{Solution}: Une séquence d'actions qui mène de l'état initial à l'état final
+        \item \textbf{Modèle de Transition $Result(s, a)$}: la fonction qui définit les conséquences des actions. L'état résultant de l'action $a$ dans l'état $s$
         \item \textbf{État final}: l'état que l'on veut atteindre
+        \item \textbf{Cout de l'action $c(s, a, s')$}: le coût de l'action $a$ dans l'état $s$ qui mène à l'état $s'$
+        \item \textbf{Solution}: Une séquence d'actions qui mène de l'état initial à l'état final. La solution 
+            peut être \textbf{optimale}, c'est à dire qu'il n'y a pas de solution dont le coût est moindre.
     \end{itemize}
 \end{definition}
 
@@ -61,7 +63,7 @@
 
 
 \begin{example}\leavevmode
-    Voyage en Roumanie:
+    Nous allons dés lors modéliser le problème de trouver un chemin entre deux villes en Roumanie.
     \begin{itemize}
         \item \textbf{États}: les villes de Roumanie
         \item \textbf{État initial}: Arad
@@ -81,14 +83,22 @@
     Un graphe d'espace d'état est un graphe qui représente les états et les actions possibles.
     \begin{itemize}
         \item \textbf{Noeuds}: les états
-        \item \textbf{Arêtes}: les actions
+        \item \textbf{Arêtes}: les résultats d'actions, successeurs
     \end{itemize} 
     L'état initial est le noeud racine et l'état final est un noeud (ou plusieurs ?).
+    Les noeuds sont sont les représentations d'une configuration de l'environnement.
 \end{definition}
 
-\begin{warning}
-    Dans ce genre de graphe, chaque état n'est représenté qu'\textbf{une seule fois}.
-\end{warning}
+\warningbox{Dans ce genre de graphe, chaque état n'est représenté qu'\textbf{une seule fois}.}
+
+\begin{figure}[H]
+    \begin{center}
+        % \includegraphics[width=0.45\textwidth]{../pictures/state_space_graph.png}
+        \rotatebox{-90}{\includegraphics[width=0.45\textwidth]{../pictures/state_space_graph.png}}
+    \end{center}
+    \caption{Graph d'état partiel pour le jeu Pacman}\label{fig:stategraph}
+\end{figure}
+
 
 \begin{remark}\leavevmode
     Il est fortement possible de ne pas pouvoir représenter un problème de recherche par un graphe d'espace d'état car 
@@ -102,6 +112,7 @@
 
 \begin{definition}{Arbre de Recherche}{searchtree}
     Un arbre de recherche est un arbre qui représente les états et les actions possibles.
+    C'est la représentation d'un \textit{Et si} je prenais cette action ? sur une certaine configuration de l'environnement.
     \begin{itemize}
         \item \textbf{Noeuds}: les états, plans pour arriver à ces états
         \item \textbf{Arêtes}: les actions
@@ -110,6 +121,25 @@
     L'état initial est le noeud racine et l'état final est un noeud (ou plusieurs ?). 
     Les noeuds peuvent être représentés plusieurs fois, (\textbf{il est donc plus grand qu'un graphe d'espace d'état.})
 \end{definition}
+
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.5\textwidth]{../pictures/st_vs_sg.png}
+    \end{center}
+    \caption{Arbre de recherche vs Graphe d'espace d'état}\label{fig:stvssg}
+\end{figure}
+
+\warningbox{
+    Chaque noeuds dans un arbre de recherche, est un chemin dans le graphe d'espace d'état.
+}
+
+\begin{note}
+    L'arbre de recherche est construit au \textbf{fur et à mesure} de la recherche. 
+    En général, on essaye de  minimiser sa taille.
+\end{note}
+
+
 
 \begin{figure}[H]
     \begin{center}
@@ -167,26 +197,26 @@
 
 
 
-\subsection{DFS} % (fold)
+\subsection{Depth-First Search (DFS)} % (fold)
 \label{sub:dfs}
 
 \begin{definition}{DFS}{dfs}
     La recherche en profondeur (\textbf{DFS}) est une stratégie de recherche qui explore l'arbre en allant le plus loin possible dans une branche avant de revenir en arrière. 
     \begin{itemize}
         \item \textbf{Frontière}: une pile (LIFO)
-        \item \textbf{Stratégie}: on choisit le noeud le plus profond de la frontière
+        \item \textbf{Stratégie}: on choisit le noeud le plus profond de la frontière et on l'étend
     \end{itemize} 
 \end{definition}
 % subsection DFS (end)
 
-\subsection{BFS} % (fold) 
+\subsection{Breadth-First Search (BFS)} % (fold) 
 \label{sub:bfs} 
 
 \begin{definition}{BFS}{bfs}
     La recherche en largeur (\textbf{BFS}) est une stratégie de recherche qui explore l'arbre en allant le plus large possible dans une branche avant de revenir en arrière. 
     \begin{itemize}
         \item \textbf{Frontière}: une file (FIFO)
-        \item \textbf{Stratégie}: on choisit le noeud le moins profond de la frontière
+        \item \textbf{Stratégie}: on choisit le noeud le moins profond de la frontière et on l'étend
     \end{itemize} 
 \end{definition} 
 % subsection BFS (end)
@@ -224,7 +254,8 @@
 
 \begin{remark}\leavevmode
     Même si cette algorithme visite plusieurs fois les mêmes noeuds, ça n'a pas vraiment d'impact
-    car le nombre de noeuds est réduit (car on mise de le trouver avant d'atteindre la limite de profondeur)
+    car le nombre de noeuds est réduit. En effet, on mise de le trouver avant d'atteindre la limite de profondeur. 
+    Plus on avance dans l'arbre, plus le nombre de noeuds augmente de $b$ (branching factor), nous misons donc sur le fait que la solution se trouve dans les premiers noeuds.
 \end{remark}
 
 % subsection Iterative deepening (end)
@@ -233,7 +264,7 @@
 \subsection{UCS} % (fold) 
 \label{sub:ucs} 
 
-\begin{definition}{UCS}{ucs}
+\begin{definition}{Uniform Cost Search}{ucs}
     La recherche par coût uniforme (\textbf{UCS}) est une stratégie de recherche qui explore l'arbre en allant le plus loin possible dans une branche avant de revenir en arrière. 
     \begin{itemize}
         \item \textbf{Frontière}: une file de priorité
@@ -264,7 +295,7 @@ Pour ananlyser un algorithme, on va utilser ces différentes propriétés:
             \multicolumn{1}{c|}{\textbf{Profondeur itérative}} \\
 
             \hline
-            \textbf{Complet}& Oui & Oui & Non & Oui \\ 
+            \textbf{Complet}& Oui & Oui & Non (cycle, $\infty$ noeuds) & Oui \\ 
             \hline
             \textbf{Optimal}& Oui & Oui & Non & Oui\\ 
             \hline
