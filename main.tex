@@ -4,6 +4,102 @@
 
 
 % Based on 'Fun Template 1', available at https://www.overleaf.com/latex/templates/fun-template-1/drwvdzsrpgzz
+\usetikzlibrary{shapes,decorations,arrows,calc,arrows.meta,fit,positioning, backgrounds}
+% A command to draw ''NIL'' inside a black box
+\newcommand\Nilbox{%
+  \normalsize\colorbox{black}{\textcolor{white}{\textsf{\bfseries NIL}}}}
+
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+\tikzset{
+    % -Latex,
+    arrow/.style={-Latex, , thick},
+    auto,node distance =1 cm and 1 cm,semithick,
+    state/.style ={ellipse, draw, minimum width = 0.7 cm},
+    point/.style = {circle, draw, inner sep=0.04cm,fill,node contents={}},
+    bidirected/.style={Latex-Latex,dashed},
+    el/.style = {inner sep=2pt, align=left, sloped},
+      NBlack/.style={
+        circle,
+        minimum size=33pt,
+        fill=black,
+        draw,
+        font=\color{black}\sffamily\large\bfseries
+      },
+      NRed/.style={
+        circle,
+        minimum size=33pt,
+        fill=red!90!black,
+        draw,
+        font=\color{black}\sffamily\large\bfseries
+      },
+      Normal/.style={
+        circle,
+        minimum size=33pt,
+        draw,
+        font=\color{black}\sffamily\large\bfseries
+      },
+      pics/solo/.style args={#1}{
+        code={
+        \node[Normal] 
+          (#1) {#1};
+        }
+      },
+      pics/double/.style args={#1/#2/#3}{
+        code={
+        \node[Normal] 
+          (#3-left) {#1};
+        \node[Normal,right=8pt of #3-left] 
+          (#3-right) {#2};
+        \draw[->,>=latex,thick] 
+          (#3-left) -- (#3-right);  
+        \begin{pgfonlayer}{background}
+          \node[
+            name=#3,
+            draw,
+            inner sep=8pt,
+            % fill=gray!10,
+            dashed,
+            fit={(#3-left) (#3-right)}
+          ] {};
+        \end{pgfonlayer} 
+        }
+      },
+      pics/triple/.style args={#1/#2/#3/#4}{
+        code={
+        \node[Normal] 
+          (#4-left) {#1};
+        \node[Normal,right=8pt of #4-left] 
+          (#4-middle) {#2};
+        \node[Normal,right=8pt of #4-middle] 
+          (#4-right) {#3};
+        \draw[->,>=latex,thick] 
+          (#4-middle) -- (#4-left);  
+        \draw[->,>=latex,thick] 
+          (#4-middle) -- (#4-right);  
+        \begin{pgfonlayer}{background}
+          \node[
+            name=#4,
+            draw,
+            inner sep=8pt,
+            % fill=gray!10,
+            dashed,
+            fit={(#4-left) (#4-right)}
+          ] {};
+        \end{pgfonlayer} 
+        }
+      }
+}
+
+% Tikz settings optimized for causal graphs. (heaps)
+\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=18pt,inner sep=0pt]
+\tikzstyle{redVertex}  =[draw,fill=red,     circle,minimum size=18pt,inner sep=0pt, text=black]
+\tikzstyle{blackVertex}=[draw,circle,minimum size=18pt,inner sep=0pt, text=black]
+\tikzstyle{nil}        =[draw=none,fill=white,circle,minimum size=18pt,inner sep=0pt, text=white]
+\tikzstyle{Normal}        =[draw,fill=white,circle,minimum size=18pt,inner sep=0pt, text=black]
+\tikzstyle{yellow}        =[draw,fill=yellow,circle,minimum size=18pt,inner sep=0pt, text=black]
+\tikzstyle{green}        =[draw,fill=green,circle,minimum size=18pt,inner sep=0pt, text=black]
 
 \MakeRobust{\Call}
 
