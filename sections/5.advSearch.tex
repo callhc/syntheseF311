@@ -26,6 +26,8 @@ dans des jeux à \textbf{deux ou plusieurs joueurs}.
     \end{itemize}
 \end{note}
 % subsection Definition d'un jeu (end)
+Les algorithmes de recherche que nous avons vu précédemment ne sont pas adaptés pour les jeux car ils ne prennent pas en compte le fait que l'adversaire joue aussi. 
+Nous allons donc voir des algorithmes qui vont prendre en compte le fait que l'adversaire joue aussi et vont alors recommander le meilleur coup à jouer selon toutes les possibilités.
 
 \subsection{Minimax} % (fold)
 \label{sub:minimax}
@@ -41,7 +43,7 @@ dans des jeux à \textbf{deux ou plusieurs joueurs}.
     \begin{center}
         \includegraphics[width=0.55\textwidth]{./pictures/minimax.png}
     \end{center}
-    \caption{Minimax dans un arbre}\label{fig:minimaxtree}
+    \caption{Minimax dans un arbre.}\label{fig:minimaxtree}
 \end{figure}
 
 \begin{algorithm}[H]
@@ -116,6 +118,9 @@ Chaque joueur va alors choisir le coup qui maximise son utilité.
     \end{center}
     \caption{Représentation en Multijoueur}\label{fig:mutliminimax}
 \end{figure}
+
+Cette algorithme n'est pas adapté pour les jeux où il y a beaucoup de noeuds car il va générer tout l'arbre de recherche. 
+Nous allons donc voir des algorithmes qui vont couper les branches qui ne sont pas intéressantes.
 % subsection Minimax (end)
 
 \subsection{Alpha-Beta pruning} % (fold)
@@ -124,7 +129,7 @@ Chaque joueur va alors choisir le coup qui maximise son utilité.
 \begin{definition}{Alpha-Beta pruning}{alphabeta}
     L'algorithme \textbf{Alpha-Beta pruning} est un algorithme qui permet de trouver le meilleur coup à jouer dans un jeu \textbf{déterministe} à \textbf{somme nulle}.
     Il est basé sur l'algorithme \textbf{Minimax} mais il va \textbf{couper} les branches qui ne sont pas intéressantes.
-    Il utilise 2 paramètres, $\alpha$ et $\beta$ qui représentent les valeurs minimales et maximales que l'on peut atteindre.
+    Il utilise 2 paramètres, $\alpha$ et $\beta$ qui représentent les valeurs minimales et maximales que l'on à trouvé jusqu'à présent.
     \begin{itemize}
         \item $\alpha$ est la meilleure option (valeure la plus haute) que le joueur \textbf{Max} est assuré d'obtenir. 
             \textbf{Au MOINS}.
@@ -132,6 +137,10 @@ Chaque joueur va alors choisir le coup qui maximise son utilité.
             \textbf{Au PLUS}.
     \end{itemize} 
 \end{definition}
+
+Si le noeud est un noeud \textbf{Max}, on va mettre à jour $\alpha$ avec la valeur maximale trouvée jusqu'à présent. 
+Si le noeud est un noeud \textbf{Min}, on va mettre à jour $\beta$ avec la valeur minimale trouvée jusqu'à présent. 
+Tous les noeuds qui sont entre $\alpha$ et $\beta$ ne seront pas visités car ils ne sont pas intéressants.
 
 \begin{remark}\leavevmode
     Le meilleur situation pour cette algorithme est quand les meilleurs coups sont toujours le 
@@ -153,6 +162,10 @@ Chaque joueur va alors choisir le coup qui maximise son utilité.
         \item \textbf{Complexité en espace}: $O(bm)$ et $O(\sqrt{b})$ si les noeuds sont dans le bon ordre.
     \end{itemize}
 \end{remark}
+
+\begin{note}
+    Même si l'on ne visite pas tous les noeuds, on a quand même trouver la solution optimale.
+\end{note}
 
 Si cet algorithme n'est pas suffisant, on peut utilisé une fonction d'évaluation qui permet d'évaluer les noeuds 
 qui ne sont pas des états terminaux pour estimer leur utilité.
@@ -183,7 +196,7 @@ qui ne sont pas des états terminaux pour estimer leur utilité.
                         \State value, action $\leftarrow$ value2, action2
                         \State $\alpha \leftarrow$ \Call{Max}{$\alpha$, value}
                     \EndIf
-                    \If{$v \geq \beta$}
+                    \If{value $\geq \beta$}
                         \State \Return value, action 
                     \EndIf
                 \EndFor
@@ -203,7 +216,7 @@ qui ne sont pas des états terminaux pour estimer leur utilité.
                         \State value, action $\leftarrow$ value2, action2 
                         \State $\beta \leftarrow$ \Call{Min}{$\beta$, value}
                     \EndIf
-                    \If{$v \leq \alpha$}
+                    \If{value $ \leq \alpha$}
                         \State \Return value, action 
                     \EndIf
                 \EndFor
@@ -218,13 +231,132 @@ qui ne sont pas des états terminaux pour estimer leur utilité.
 
 \subsection{Expectimax} % (fold)
 \label{sub:expectimax}
-% TODO:Faire cette section
+
+\begin{definition}{Expectimax}{expect}
+    L'algorithme Expectimax est une technique d'exploration d'arbre de décision utilisée pour la prise 
+    de décision dans des environnements incertains ou probabilistes. Il est souvent appliqué dans 
+    des jeux et des situations où les actions des adversaires ou des événements aléatoires peuvent influencer le déroulement du jeu.
+\end{definition}
+
+C'est donc une variante de l'algorithme \textbf{Minimax} qui va prendre en compte les noeuds de \textbf{chance}. 
+Ces noeuds de chance sont des noeuds où le résultat dépend du hasard ou de l'incertitude.
+La valeure d'un noeud de chance est la moyenne pondérée des valeurs de ses fils.
+
+\begin{remark}\leavevmode
+    Les noeuds de chance sont comme les noeuds du joueur \textbf{MIN} mais cette fois-ci, 
+    le résultat n'est pas \textbf{\textit{certain}} (Poker, lancé de dés, mauvais move, ...).
+\end{remark}
+
+\begin{note}
+    Alors que minimax représente le \textbf{pire} des cas pour un joueur (l'adversaire joue de manière optimale), 
+    expectimax représente le \textbf{cas moyen} pour un joueur (l'adversaire peut aussi bien jouer de manière optimale que de manière "aléatoire").
+    Expectimax permet donc de prendre des opportunités que minimax ne prendrait pas car il est trop pessimiste, restrictif.
+\end{note}
+
+\begin{algorithm}[H]
+    \floatname{algorithm}{Expectimax}
+    \caption{Algorithme Expectimax}\label{alg:expectimax}
+    \begin{algorithmic}
+        \Function{Expectimax-Search}{game, state} 
+        \State player $\leftarrow$ game.\Call{To-Move}{state}
+        
+        \If{player = max}
+            \State value, action $\leftarrow$ \Call{Max-Value}{game, state} 
+        \Else 
+            \State value, action $\leftarrow$ \Call{Exp-Value}{game, state}
+        \EndIf
+        \State \Return action
+        \EndFunction
+        \vspace{0.5cm}
+        \Function{Max-Value}{game, state}
+        \If{game.\Call{Terminal-Test}{ state}}
+            \State \Return game.\Call{Utility}{state, player}, $null$
+        \EndIf 
+        \State value, action $\leftarrow -\infty, null$
+
+        \For{action in game.\Call{Actions}{state}}
+            \State value2, action2 $\leftarrow$ \Call{Exp-Value}{game, game.\Call{Result}{state, action}}
+            \If{value2 $>$ value}
+                \State value, action $\leftarrow$ value2, action2
+            \EndIf
+        \EndFor
+
+        \Return value, action
+        \EndFunction
+        \vspace{0.5cm}
+        \Function{Exp-Value}{game, state} 
+        \If{game.\Call{Terminal-Test}{ state}}
+            \State \Return game.\Call{Utility}{state, player}, $null$
+        \EndIf 
+        \State value, action $\leftarrow \infty, null$ 
+
+        \For{action in game.\Call{Actions}{state}}
+        \State p $\leftarrow$ game.\Call{Probability}{state, action}
+        \State value2, action2 $\leftarrow$ \Call{Max-Value}{game, game.\Call{Result}{state, action}}%{game, game.\Call{Result}{state, action}}
+        \State value $\leftarrow$ value + p * value2
+        \EndFor
+        \State \Return value, action
+        \EndFunction
+    \end{algorithmic} 
+\end{algorithm}
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=0.5\textwidth]{../pictures/expectimaxdrawing.png}
+    \end{center}
+    \caption{Arbre Expectimax}\label{fig:expectimaxtree}
+\end{figure}
+
+
+\begin{note}
+    Il n'est cependant pas possible d'élaguer l'arbre de recherche car pour évaluer 
+    un noeud de chance, il faut évaluer tous ses fils.
+\end{note}
+
 
 % subsection Expectimax (end)
 
-\subsection{Monte Carlo} % (fold)
+\subsection{Monte Carlo Tree Search (MCTS)} % (fold)
 \label{sub:monte_carlo}
-% TODO: Faire cette section
+
+\begin{definition}{MCTS}{mcts}
+    L'algorithme \textbf{Monte Carlo Tree Search} est un algorithme de recherche d'arbre qui utilise des simulations 
+    "aléatoires" ou selon une certaine politique pour trouver la meilleure action à jouer. 
+    En effet, plus on fait de simulations, plus on se rapproche de la vraie valeur de l'état. 
+    Sachant cela, on va donc faire des simulations sur les noeuds qui sont les plus intéressants 
+    en fonction du nombre de simulation à partir de ce noeud et de la valeur de ce noeud (\textbf{utilité}, \textbf{wins}).
+    Il y a 4 étapes dans cet algorithme: 
+    \begin{enumerate}
+        \item \textbf{Sélection}:  L'algorithme commence par choisir un chemin dans l'arbre existant 
+            en utilisant une stratégie qui combine l'exploration des nœuds prometteurs 
+            et l'exploitation des nœuds déjà visités.        
+        \item \textbf{Expansion}: Une fois qu'un nœud feuille est atteint, 
+            l'algorithme ajoute de nouveaux nœuds pour représenter les actions possibles à partir de cet état.
+        \item \textbf{Simulation}: Des simulations aléatoires sont effectuées à partir des nœuds nouvellement créés (tous ?)
+            (ou des nœuds déjà existants) pour estimer la valeur de chaque action. 
+            On simule  jusqu'à atteindre un état final ou une condition d'arrêt.
+      \item \textbf{Backpropagation}: Les résultats des simulations sont propagés vers le haut de  
+        l'arbre, mettant à jour les statistiques des nœuds visités pour refléter les nouvelles informations obtenues.
+    \end{enumerate}
+
+\end{definition}
+
+Pour choisir le nœud à explorer, on utilise l'équation suivante: 
+\begin{equation} 
+    UCB(i) = \frac{w_i}{n_i} + c \sqrt{\frac{\ln N}{n_i}} 
+\end{equation}
+Où $w_i$ est le nombre de victoires lors des simulations à partir du noeud $i$, $n_i$ est le nombre de simulations à partir du noeud $i$,
+$N$ est le nombre de simulations total du parent de $i$ et $c$ est un paramètre d'exploration qui contrôle l'importance de l'exploration par rapport à l'exploitation. 
+Plus $c$ est grand, plus l'exploration est importante. 
+
+
+A la fin, on choisit le noeud qui a eu le plus de simulations. En effet, 
+s'il a eu beaucoup de simulations, cela veut dire qu'il est intéressant de le choisir.
+
+\begin{note}
+    Plus le nombre de simulation se rapproche de $\infty$, plus il se rapprochera du choix optimal.
+\end{note}
+
 
 % subsection Monte Carlo (end)
 

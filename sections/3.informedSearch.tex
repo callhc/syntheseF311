@@ -33,7 +33,7 @@
     La recherche gloutonne (\textbf{Greedy Best-First Search}) est une stratégie de recherche qui explore l'arbre en choisissant le noeud qui semble le plus prometteur.
     \begin{itemize}
         \item \textbf{Frontière}: une file de priorité
-        \item \textbf{Stratégie}: on choisit le noeud ayant la plus petite heuristique de la frontière
+        \item \textbf{Stratégie}: on choisit le noeud ayant la meilleure heuristique de la frontière (en  fonction de la stratégie)
     \end{itemize} 
 \end{definition}
 
@@ -65,7 +65,7 @@
   \end{minipage}
    }
   \hfill
-  \scalebox{0.9}{
+  \scalebox{0.7}{
   \begin{minipage}{0.70\textwidth}
     \centering
     \includegraphics[width=\textwidth]{./pictures/greedy.png}
@@ -102,12 +102,12 @@
         f(n) = g(n) + h(n)
     \end{math} 
     où $g(n)$ est le coût pour atteindre le noeud $n$ depuis la racine et 
-    $h(n)$ est le cout du noeud $n$ pour aller jusqu'au but.
+    $h(n)$ est le cout du noeud $n$ pour aller jusqu'au but (\textit{heuristique}).
 \end{definition}
 
 \begin{figure}[H]
     \begin{center}
-        \includegraphics[width=0.65\textwidth]{./pictures/astar.png}
+        \includegraphics[width=0.5\textwidth]{./pictures/astar.png}
     \end{center}
     \caption{Exécution de l'algo A*}\label{fig:astar}
 \end{figure}
@@ -141,6 +141,7 @@
         h(n) \leq c(n, a, n') + h(n') 
     \end{math} 
     où $c(n, a, n')$ est le coût de l'action $a$ pour aller de $n$ à $n'$. 
+    Sinon, ça veut dire que l'heuristique surestime le coût pour atteindre l'état final.
 \end{definition}
 
 \begin{remark}\leavevmode
