@@ -263,15 +263,18 @@ Cette constante de normalisation est appelée \textbf{facteur de normalisation} 
         \item $P(A \cap B) = P(A)P(B)$ (il n'y a pas d'impact mutuel)
     \end{itemize}
     Elle permet de simplifier les calculs de probabilités conjointes.
+    Si deux variables aléatoires sont indépendantes, on note $A \perp B$ (avec 2 barres).
 \end{definition}
 
 \begin{definition}{Indépendance Conditionnelle}{independanceconditionnelle}
-    Deux variables aléatoires $A$ et $B$ sont indépendantes conditionnellement à une variable aléatoire $C$ si et seulement si 
+    Deux variables aléatoires $A$ et $B$ sont indépendantes conditionnellement sachant une variable aléatoire $C$ si et seulement si 
     \begin{itemize}
         \item $P(A | B \cap C) = P(A | C)$ ou 
         \item $P(A \cap B | C) = P(A | C)P(B | C)$
     \end{itemize}
-    Dans ce cas, A et B sont indépendantes sachant C. C'est à dire que l'information sur la réalisation de C n'affecte pas la relation entre A et B
+    Dans ce cas, A et B sont indépendantes sachant C. 
+    Cela signifie que si on connaît la valeur de C, savoir la valeur de B ne change pas la probabilité de A.
+    Noté $A \perp B | C$ (avec 2 barres).
 \end{definition}
 \begin{remark}\leavevmode
     Si il n'y avait pas de condition et que $A$ et $B$ sont indépendantes, 
