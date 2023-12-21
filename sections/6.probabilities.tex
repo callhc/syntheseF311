@@ -19,15 +19,15 @@ où l'on ne peut pas prédire avec certitude le résultat d'une action (\textit{
 \begin{definition}{Variable aléatoire}{varaleatoire}
     Une \textbf{variable aléatoire} est une fonction qui associe à chaque événement élémentaire 
     d'un espace probabilisé un nombre réel. 
-    On note $A$ une variable aléatoire et $x$ une valeur prise par $A$. 
-    On note $P(A=x)$ la probabilité que $A$ prenne la valeur $x$. 
+    On note $A$ une variable aléatoire et $\omega$ une valeur prise par $A$. 
+    On note $P(A=\omega)$ la probabilité que $A$ prenne la valeur $\omega$. 
     On note $P(A)$ la loi de probabilité de $A$. 
 \end{definition}
 
 \begin{remark}\leavevmode
-    C'est une manière de quantifier de manière numérique les résultats d'une expérience aléatoire.
+    C'est une manière de quantifier de numériquement les résultats d'une expérience aléatoire.
 
-    Fonction qui prend en entrée un événeement élémentaire et qui renvoie un nombre réel (quantification).
+    Fonction qui prend en entrée un événement élémentaire et qui renvoie un nombre réel (quantification).
 \end{remark}
 
 % subsection Quelques definitions (end)
@@ -37,28 +37,44 @@ où l'on ne peut pas prédire avec certitude le résultat d'une action (\textit{
 
 \begin{definition}{Probabilité Conjointes}{probconj}
     La probabilité conjointe de deux variables aléatoires $A$ et $B$ est la probabilité de l'événement 
-    où $A$ prend la valeur $x$ et $B$ prend la valeur $y$.
-    \begin{align}
+    où $A$ prend la valeur $x$ \textbf{ET} $B$ prend la valeur $y$.
+    \begin{align*}
         P(A=x , B=y) &= P(A=x \cap B=y) \\ 
                     &= P(A=x | B=y)P(B=y) \\ 
                     &= P(B=y | A=x)P(A=x)
-    \end{align}
+    \end{align*}
 \end{definition}
 
-\begin{example}\leavevmode
-    Rajouter des exs ?
-\end{example}
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.3\textwidth]{../pictures/conjproba.jpg}
+    \end{center}
+    \caption{Diagramme de Venn de $P(A \cap B)$}\label{fig:conjproba}
+\end{figure}
+
+
+% \begin{example}\leavevmode
+%     Rajouter des exs ?
+% \end{example}
 
 \begin{definition}{Probabilité d'une disjonction}{probdisonction}
     La probabilité d'une disjonction de deux variables aléatoires $A$ et $B$ est la probabilité de l'événement 
-    où $A$ prend la valeur $x$ ou $B$ prend la valeur $y$.
+    où $A$ prend la valeur $x$ \textbf{OU} $B$ prend la valeur $y$.
     \begin{equation}
         P(A=x \cup B=y) = P(A=x) + P(B=y) - P(A=x\cap B=y)
     \end{equation}
     La sousstraction est nécessaire pour éviter de compter deux fois la probabilité de l'intersection.
 \end{definition}
 
-\newpage
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.95\textwidth]{../pictures/disjproba.png}
+    \end{center}
+    \caption{Diagramme de Venn de $P(A \cup B)$}\label{fig:disjproba}
+\end{figure}
+
+
+% \newpage
 
 
 \begin{definition}{Probabilité Marginale}{probmarginale}
@@ -74,15 +90,6 @@ où l'on ne peut pas prédire avec certitude le résultat d'une action (\textit{
     C'est la probabilité sur un sous-ensemble de variables aléatoires.
 \end{remark}
 
-
-\begin{definition}{Probabilité Conditionnelle}{probconditionnelle}
-    La probabilité conditionnelle de deux variables aléatoires $A$ et $B$ est la probabilité de l'événement 
-    où $A$ prend la valeur $x$ sachant que $B$ prend la valeur $y$.
-    \begin{equation}
-        P(A=x | B=y) = \frac{P(A=x\cap B=y)}{P(B=y)}
-    \end{equation} 
-\end{definition}
-
 \begin{definition}{Distribution de probabilité}{distprob}
     Une distribution de probabilité est une fonction qui associe à chaque événement élémentaire 
     d'un espace probabilisé un nombre réel positif. 
@@ -93,10 +100,69 @@ où l'on ne peut pas prédire avec certitude le résultat d'une action (\textit{
 
 \end{definition}
 
-Une distribution conditionnelle peut être vue comme une distribution \textbf{renomalisée} afin de 
-respecter la contrainte de somme à 1.
-Pour renormaliser une distribution, il suffit de diviser chaque probabilité par la somme de toutes les probabilités.
+\begin{definition}{Probabilité Conditionnelle}{probconditionnelle}
+    La probabilité conditionnelle de deux variables aléatoires $A$ et $B$ est la probabilité de l'événement 
+    où $A$ prend la valeur $x$ sachant que $B$ prend la valeur $y$.
+    \begin{equation}
+        P(A=x | B=y) = \frac{P(A=x\cap B=y)}{P(B=y)}
+    \end{equation} 
+\end{definition}
+
+
+Une probabilité conditionnelle peut être vue comme une probabilité \textbf{renomalisée} afin de 
+respecter la contrainte de somme à 1. En effet, le facteur $P(B=y)$ est égale à la probabilité marginale 
+$\alpha = \sum_{x \in A} P(A=x\cap B=y)$.
+Pour renormaliser une probabilité/distribution, il suffit de diviser chaque probabilité par la somme de toutes les probabilités.
 Cette constante de normalisation est appelée \textbf{facteur de normalisation} et est notée $\alpha$.
+\newpage
+\begin{example}\leavevmode
+    Prenons ce tableau de probabilité conjointe $P(T, W)$
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|ll|l|}
+            \hline
+            \multicolumn{1}{|l|}{T} & W    & P   \\ \hline
+            hot                     & sun  & 0.4 \\
+            hot                     & rain & 0.1 \\
+            cold                    & sun  & 0.2 \\
+            cold                    & rain & 0.3 \\ \hline
+        \end{tabular}
+        \caption{Tableau $P(T \cap W)$}\label{fig:tableau}
+    \end{table}
+    La somme de toutes les probabilités est égale à 1. Ce qui est normal car c'est une distribution de probabilité.
+    Si nous voulons trouver la probabilité conditionnelle $P(W | T=\text{cold})$, on procède comme suit: 
+    \begin{itemize}
+        \item On sélectionne les lignes où $T=\text{cold}$. (comme dans une bdd)
+            \begin{table}[H]
+                \centering
+                \begin{tabular}{|ll|l|}
+                    \hline
+                    \multicolumn{1}{|l|}{T} & W    & P   \\ \hline
+                    cold                    & sun  & 0.2 \\
+                    cold                    & rain & 0.3 \\ \hline
+                \end{tabular}
+                \caption{Tableau $P(T=\text{cold} \cap W)$}\label{fig:tableaucold}
+            \end{table}
+            Nous remarquons que la somme des probabilités n'est plus égale à 1.
+        \item On renormalise les probabilités en divisant chaque probabilité par la somme de toutes les probabilités.
+            \begin{equation*}
+                \alpha = \frac{1}{\sum_{x \in W} P(T=\text{cold} \cap W=x)} = \frac{1}{0.2 + 0.3} = \frac{1}{0.5}
+                \label{eq:renorm}
+            \end{equation*}
+            \begin{table}[H]
+                \centering
+                \begin{tabular}{|ll|l|}
+                    \hline
+                    \multicolumn{1}{|l|}{T} & W    & P   \\ \hline
+                    cold                    & sun  & 0.4 $ = 0.2 \cdot \alpha$ \\
+                    cold                    & rain & 0.6 $ = 0.3 \cdot \alpha$\\ \hline
+                \end{tabular}
+                \caption{Tableau $P(W | T=\text{cold})$ renormalisé}\label{fig:tableaucoldrenorm}
+            \end{table}
+            Nous remarquons que la somme des probabilités est de nouveau égale à 1.
+    \end{itemize}
+\end{example}
+
 
 \begin{remark}
     Une distribution de probabilité est une variable aléatoire. 
@@ -118,12 +184,13 @@ Cette constante de normalisation est appelée \textbf{facteur de normalisation} 
 \begin{theorem}{Multiplication}{multiplication}
     Ce théorème permet de calculer une probabilité conjointe à partir de probabilités conditionnelles.
     \begin{equation}
-        P(A\cap B) = P(A|B)P(B)
+        % P(A\cap B) P(A|B)P(B)
+        P(A\cap B) = P(A|B)P(B) \iff P(A|B) = \frac{P(A\cap B)}{P(B)}
     \end{equation} 
 \end{theorem}
 
 
-\newpage
+% \newpage
 
 
 \begin{theorem}{Chainage}{chainage}
@@ -137,6 +204,50 @@ Cette constante de normalisation est appelée \textbf{facteur de normalisation} 
 \begin{remark}\leavevmode
     C'est la probabilité d'une variable aléatoire sachant que toutes les autres précédentes ont eu lieu.
 \end{remark}
+
+\subsection{Inférence} % (fold)
+\label{sub:inference}
+
+\begin{definition}{Inférence}{inference}
+    L'inférence est le processus de déduction de nouvelles informations à partir d'informations déjà connues.
+    En probabilité, c'est le processus de déduction de probabilités à partir de probabilités déjà connues. 
+    Comme par exemple, calculer la probabilité conditionnelle $P(A|B)$ (inconnue) à partir de la probabilité conjointe $P(A\cap B)$ (connue).
+\end{definition}
+
+\begin{remark}\leavevmode
+    En général, nous avons des probabilités conjointes et nous voulons calculer des probabilités conditionnelles.
+\end{remark}
+
+\subsubsection{Inférence par Énumération} % (fold)
+\label{sec:inference_par_enumeration}
+
+\begin{definition}{Inférence par Énumération}{inferenceparenumeration}
+    L'inférence par énumération est une méthode d'inférence qui consiste à énumérer toutes les valeurs possibles 
+    des variables aléatoires et à calculer la probabilité de chaque valeur.
+    \begin{equation}
+        P(A|B) = \frac{P(A\cap B)}{P(B)} = \frac{\sum_{x \in A} P(A=x \cap B)}{P(B)}
+    \end{equation} 
+    Cette méthode est très coûteuse en temps et en mémoire car il faut énumérer toutes les valeurs possibles. 
+    Il y a 3 types de variables:
+    \begin{itemize}
+        \item \textbf{Variables d'observation}: Variables connues $E_i$ qui vont nous permettre de faire l'inférence
+        \item \textbf{Variables cachées}: Variables inconnues qui ne nous intéresse pas $H_i$ 
+        \item \textbf{Valariable de Requête}: Variable inconnue qui nous intéresse $Q_i$
+    \end{itemize}
+    Toutes les variables sont des variables aléatoires $X_i$.
+    Nous recherchons la probabilité conditionnelle $P(Q_i | E_1, ..., E_n)$.
+\end{definition}
+
+(pas trop compris en vrai)
+
+\begin{remark}\leavevmode
+    Cette méthode n'est pas utilisable en pratique car elle est trop coûteuse en temps et en mémoire. 
+    Complexité exponentielle en fonction du nombre de variables cachées.
+\end{remark}
+
+% subsubsection Inference par Enumeration (end)
+
+% subsection Inference (end)
 
 
 % subsection Rappel proba (end)

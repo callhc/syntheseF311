@@ -46,6 +46,33 @@ Nous allons donc voir des algorithmes qui vont prendre en compte le fait que l'a
     \caption{Minimax dans un arbre.}\label{fig:minimaxtree}
 \end{figure}
 
+
+L'algorithme va généré l'arbre de recherche jusqu'aux étas \textbf{terminaux} pour utiliser la fonction d'utilité. 
+Il traite ensuite ces valeurs en remontant l'arbre et les choisit en fonction du joueur qui doit jouer (\textbf{Min} ou \textbf{Max})
+\begin{note}
+    Pour ne pas généré tous l'arbre, on peut utiliser une \textbf{profondeur limitée}.
+\end{note}
+
+Si il y a plus de 2 joueurs, nous pouvons assigner à chaque noeud un tuple de valeurs qui représente l'utilité pour chaque joueur. 
+Chaque joueur va alors choisir le coup qui maximise son utilité. 
+
+\begin{remark}\leavevmode
+    Cet algortihme est basé sur \textbf{DFS}. 
+    \begin{itemize}
+        \item \textbf{Complexité en temps}: $O(b^m)$
+        \item \textbf{Complexité en espace}: $O(bm)$
+    \end{itemize}
+\end{remark}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.65\textwidth]{./pictures/multiminimax.png}
+    \end{center}
+    \caption{Représentation en Multijoueur}\label{fig:mutliminimax}
+\end{figure}
+
+Cette algorithme n'est pas adapté pour les jeux où il y a beaucoup de noeuds car il va générer tout l'arbre de recherche. 
+Nous allons donc voir des algorithmes qui vont couper les branches qui ne sont pas intéressantes.
 \begin{algorithm}[H]
     \floatname{algorithm}{Minimax}
     \caption{Algorithme Minimax}\label{alg:minimax}
@@ -94,34 +121,8 @@ Nous allons donc voir des algorithmes qui vont prendre en compte le fait que l'a
         \EndFunction
     \end{algorithmic} 
 \end{algorithm}
-
-L'algorithme va généré l'arbre de recherche jusqu'aux étas \textbf{terminaux} pour utiliser la fonction d'utilité. 
-Il traite ensuite ces valeurs en remontant l'arbre et les choisit en fonction du joueur qui doit jouer (\textbf{Min} ou \textbf{Max})
-\begin{note}
-    Pour ne pas généré tous l'arbre, on peut utiliser une \textbf{profondeur limitée}.
-\end{note}
-
-Si il y a plus de 2 joueurs, nous pouvons assigner à chaque noeud un tuple de valeurs qui représente l'utilité pour chaque joueur. 
-Chaque joueur va alors choisir le coup qui maximise son utilité. 
-
-\begin{remark}\leavevmode
-    Cet algortihme est basé sur \textbf{DFS}. 
-    \begin{itemize}
-        \item \textbf{Complexité en temps}: $O(b^m)$
-        \item \textbf{Complexité en espace}: $O(bm)$
-    \end{itemize}
-\end{remark}
-
-\begin{figure}
-    \begin{center}
-        \includegraphics[width=0.65\textwidth]{./pictures/multiminimax.png}
-    \end{center}
-    \caption{Représentation en Multijoueur}\label{fig:mutliminimax}
-\end{figure}
-
-Cette algorithme n'est pas adapté pour les jeux où il y a beaucoup de noeuds car il va générer tout l'arbre de recherche. 
-Nous allons donc voir des algorithmes qui vont couper les branches qui ne sont pas intéressantes.
 % subsection Minimax (end)
+\newpage
 
 \subsection{Alpha-Beta pruning} % (fold)
 \label{sub:alpha_beta_pruning}
