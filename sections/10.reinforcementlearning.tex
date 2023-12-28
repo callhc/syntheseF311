@@ -189,13 +189,12 @@ en termes de Q-values :
 \end{itemize}
 La différence entre les deux est que dans le cas des q-values, on commence par une moyenne tandis que dans le cas de value iteration,
 on commence par un max. L'utilisation d'échantillons n'est donc pas possible dans value iteration. Sauf qu'avec les q-values,
-c'est possible, l'équation écrite au dessus représente en fait la \textbf{Q-value iteration}.
-
-
+c'est possible, l'équation écrite au dessus représente en fait la \textbf{Q-value iteration}.\\
 A partir d'un échantillon $(s,a,s',r)$, on peut mettre à jour $Q(s,a)$ :
-\begin{equation*}
+\begin{equation}
     \text{sample} = R(s,a,s')+\gamma\max\limits_{a'}Q(s',a')
-\end{equation*}
+    \label{eq:q_value}
+\end{equation}
 On voit qu'on a plus d'évaluation de politique. On peut intégrer la nouvelle estimation dans la moyenne dynamique :
 \begin{equation*}
     Q(s,a)\leftarrow (1-\alpha)Q(s,a)+\alpha\text{ sample}
@@ -211,3 +210,94 @@ Cependant, il faut faire attention à:
     \item Il faut parfois donner une valeur très petite à $\alpha$ mais il ne faut pas le diminuer trop rapidement.
     \item Il n'y a pas vraiment d'importance à la façon dont on choisit les actions.
 \end{itemize}
+\begin{remark}
+    Voici ce qui a été vu jusque maintenant :
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\linewidth]{pictures/resume_offline_RL.pdf}
+        \caption{Résumé de ce qui a été vu jusque maintenant}
+        \label{fig:rl_summary}
+    \end{figure}
+\end{remark}
+
+\subsection{Exploration vs Exploitation} % (fold)
+\label{sub:exploration_vs_exploitation}
+\begin{example}
+    Imaginons que vous alliez toujours dans le même restaurant qui est très bien et que vous adorez y aller. Mais un jour,
+    un tout nouveau restaurant ouvre juste à côté, est-ce que vous aller continuer à aller dans le même restaurant ou est-ce
+    que vous allez essayer le nouveau restaurant ? Aller tester le nouveau restaurant est risqué car il pourrait être moins
+    bon que l'ancien. C'est le dilemme entre l'exploration et l'exploitation.
+\end{example}
+
+\subsubsection{$\epsilon$-greedy} % (fold)
+C'est le plus simple, on choisit entre prendre une action aléatoire (avec une probabilité de \textbf{$\epsilon$}) ou alors 
+suivre la politique (avec une probabilité, plus élevée, de \textbf{$1-\epsilon$}).\\
+Dans ce cas, si l'algorithme tourne suffisament longtemps, nous sommes sûrs d'explorer tous les états et les q-values vont
+converger vers les valeurs optimales. Afin d'avoir ces valeurs optimales, il faut que le $\epsilon$ diminue dans le temps afin
+de converger vers une politique optimale.
+ 
+\subsubsection{Fonctions d'exploration} % (fold)
+L'idée ici se base (plutôt que d'explorer de façon aléatoire) sur le fait d'explorer des états qui sont pas encore bien connus.
+Mais si on connait bien un état, cela ne sert à rien de revisiter cet état.\\
+Pour ce faire, on utilise une fonction d'exploration de la forme suivante : $f(u,n)=u+\frac{k}{n}$ où $u$ est la valeur de
+l'état et $n$ est le nombre de fois qu'on a visité l'état et $k$ est une constante. Nous remarquons donc qu'au plus un état
+a été visité, la fonction diminue puisque le terme en $\frac{k}{n}$ diminue ($n>>$).\\
+La q-value de l'équation (\ref{eq:q_value}) s'écrit désormais :
+\begin{equation*}
+    Q(s,a) \leftarrow_{\alpha} R(s,a,s')+\gamma\max\limits_{a'}f(Q(s',a'),N(s',a'))
+\end{equation*}
+Où $\leftarrow_{\alpha}$ dit qu'on fait une mise à jour avec un poids, on a déjà une valeur Q, on en a une nouvelle et donc on
+va combiner \textbf{l'ancienne $+(\alpha\times)$ la nouvelle}. Dès lors, on prend en compte les états qui n'ont pas été visité
+beaucoup en leur donnant une valeur plus élevée, si on a des actions dans $s'$ qu'on a pas encore beaucoup prises, si c'est le
+cas, alors la valeur sera plus grande.
+
+\subsubsection{Regret} % (fold)
+Si on a appris deux politiques optimales selon deux algorithmes différents, comment savoir laquelle est la meilleure ?\\
+Il faut prendre en compte non seulement la récompense finale mais on va regarder toutes les récompenses obtenus au fur 
+et à mesure de l'algorithme. On regardera par exemple quel algorithme a trouvé la politique optimale de façon la plus rapide.
+La notion de regret intervient dans cette comparaison, et donc une exploration aléatoire aura un regret bien plus élevé qu'une
+exploration basée sur des fonctions d'exploration. Le regret ne sera jamais égal à 0.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{pictures/regret.png}
+    \caption{Exemple de regret}
+    \label{fig:regret}
+\end{figure}
+
+\subsection{Approximate Q-learning} % (fold)
+Dans le cas de q-learnin, on garde une table avec toutes les q-values. Cependant, dans des situations réalistes, on ne peut pas
+faire ceci, car trop d'états par exemple. Le but est d'apprendre d'un nombre d'état minimum et d'ensuite faire une généralisation.
+\begin{example}
+    Si on a déjà été dans un building par une certaine porte, on peut essayer d'entrer dans un autre building même si on ne 
+    connait pas et qu'on a jamais vu la porte de ce nouveau building.
+\end{example}
+
+La solution c'est de décrire un état par un vecteur de features (propriétés). Pour combiner les valeurs de ces features, on 
+va utiliser des fonctions de valeur linéaires. On pourrait faire ceci sur le value learning ou sur le q-learning mais ici, on
+va se concentrer sur le q-learning :
+\begin{equation}
+    Q(s,a)=w_1f_1(s,a)+w_2f_2(s,a)+\dots+w_nf_n(s,a)
+    \label{eq:approx_q_learning}
+\end{equation}
+Donc ici, on a un ensemble de features ($f_1,f_2,\dots,f_n$) et un ensemble de poids ($w_1,w_2,\dots,w_n$). On attend de q-learning
+d'apprendre ces poids, de façon qu'une fois que les poids sont appris, les q-values soient plus ou moins optimales.
+\warningbox{
+    Il se peut que deux états aient les mêmes features mais des q-values différentes.
+}
+Pour une transition $(s,a,r,s')$, on a la différence qui vaut $[r+\gamma\max\limits_{a'}Q(s',a')]-Q(s,a)$. Dès lors :
+\begin{equation*}
+    \begin{aligned}
+        Q(s,a) &\leftarrow Q(s,a)+\alpha[\text{différence}]\\
+        w_i &\leftarrow w_i+\alpha[\text{différence}]f_i(s,a)
+    \end{aligned}
+\end{equation*}
+\begin{example} Voici un exemple sur le jeu Pac-Man :
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.7\linewidth]{pictures/q-pacman.png}
+        \caption{Exemple d'approximate q-learning}
+        \label{fig:approx_q_learning}
+    \end{figure}
+    Avec $f_{DOT}$ qui est le feature du joueur par rapport à un point et $f_{GST}$ qui est le feature du joueur par rapport à un
+    fantôme.\\
+\end{example}
