@@ -142,12 +142,12 @@ C'est-à-dire que l'utilité d'une politique est la somme des récompenses futur
         \Procedure{ValueIteration}{$S, A, T, R, \gamma, \epsilon$}
             \State $V(s) \gets 0$ for all $s \in S$
             \Repeat
-                \State $V_k \gets V$ # Copie de $V$
+                \State $V_k \gets V$ \# Copie de $V$
                 \ForAll{$s \in S$}
                     \State $V_k(s) \gets \max_{a} \sum_{s'} T(s, a, s') \left[ R(s, a, s') + \gamma V(s') \right]$
                     % \State $V_(s) \gets \max_{a} \sum_{s'} T(s, a, s') \left[ R(s, a, s') + \gamma V(s') \right]$
                 \EndFor
-                \State $V \gets V_k$ # Mise à jour de $V$
+                \State $V \gets V_k$ \# Mise à jour de $V$
             \Until{$\max_{s \in S} |V(s) - V'(s)| < \epsilon$}
             \State \textbf{return} $V$
         \EndProcedure
@@ -196,11 +196,11 @@ Nous avons juste besoin l'utilité d'un état en fonction \textbf{d'une seule} a
         \Procedure{PolicyEvaluation}{$S, A, T, R, \gamma, \pi$}
             \State $V(s) \gets 0$ for all $s \in S$
             \Repeat
-                \State $V_k \gets V$ # Copie de $V$
+                \State $V_k \gets V$\# Copie de $V$
                 \ForAll{$s \in S$}
                     \State $V_k(s) \gets \sum_{s'} T(s, \pi(s), s') \left[ R(s, \pi(s), s') + \gamma V(s') \right]$
                 \EndFor
-                \State $V \gets V_k$ # Mise à jour de $V$
+                \State $V \gets V_k$ \# Mise à jour de $V$
             \Until{$\max_{s \in S} |V(s) - V'(s)| < \epsilon$}
             \State \textbf{return} $V$
         \EndProcedure
@@ -227,7 +227,7 @@ On a donc moins de calculs à faire car on ne va pas devoir calculer toutes les 
         \Procedure{PolicyIteration}{$S, A, T, R, \gamma, \epsilon$}
             \State $\pi(s) \gets$ random policy
             \Repeat
-            \State $V_\pi_{k+1} \gets$ \Call{PolicyEvaluation}{$S, A, T, R, \gamma, \pi$}
+            \State $V_{\pi_{k+1}} \gets$ \Call{PolicyEvaluation}{$S, A, T, R, \gamma, \pi$}
             \State $\pi_{i+1} \gets$ \Call{PolicyExtraction}{$S, A, T, R, \gamma, V$}
             \Until{$\pi$ does not change}
             \State \textbf{return} $\pi$
