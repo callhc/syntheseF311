@@ -287,6 +287,25 @@ Voici la procèdure pour calculer une probabilité marginale avec l'inférence p
             \caption{Tableau des probabilités conditionnelles de $P(R, T)$}
             \label{tab:rt}
         \end{table}
+        Il faut donc join la table $P(R, T)$ avec $P(L | T)$ pour avoir $P(R, T, L)$. On fait une jointure sur $T$ qui est la variable en commun.
+        On obtien la grande table suivante: 
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|l|l|l|l|}
+                \hline
+                $R$ & $T$ & $L$ & 0.024 $= 0.08 \cdot 0.3$ \\ 
+                $R$ & $T$ & $\neg L$ & 0.056 $= 0.08 \cdot 0.7$\\
+                $R$ & $\neg T$ & $L$ & 0.002 $= 0.02 \cdot 0.1$\\
+                $R$ & $\neg T$ & $\neg L$ & 0.018 $= 0.02 \cdot 0.9$\\
+                $\neg R$ & $T$ & $L$ & 0.27 $= 0.09 \cdot 0.3$\\
+                $\neg R$ & $T$ & $\neg L$ & 0.063 $= 0.09 \cdot 0.7$\\
+                $\neg R$ & $\neg T$ & $L$ & 0.081 $= 0.81 \cdot 0.1$\\
+                $\neg R$ & $\neg T$ & $\neg L$ & 0.729 $= 0.81 \cdot 0.9$\\
+                \hline
+            \end{tabular}
+            \caption{Tableau des probabilités conditionnelles de $P(R, T, L)$}
+            \label{tab:rtl} 
+        \end{table}
     \item \textbf{Elimination}: On élimine les variables qui ne sont pas observées en sommant les facteurs qui ont les mêmes variables. 
         Attention à ne pas supprier les variables qui sont observées ou bien celle qui nous intéresse.
         On élimine jusqu'a ce qu'il nous reste que la variable dont on veut calculer la probabilité.
@@ -303,6 +322,35 @@ Voici la procèdure pour calculer une probabilité marginale avec l'inférence p
             \label{tab:t}
         \end{table}
         On a additionné les lignes ou $T$ avait la même valeur car nous voulons supprimer $R$.
+        Notre but est de calculer $P(L)$, donc on ne peut pas supprimer $L$. Il faut d'abord supprimer $R$ et $T$.
+        La table \ref{tab:rtl} devient, lorsque on élimine $R$: 
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|l|l|l|}
+                \hline
+                $T$ & $L$ & 0.051 $= 0.024 + 0.027$ \\
+                $T$ & $\neg L$ & 0.119 $= 0.056 + 0.063$\\
+                $\neg T$ & $L$ & 0.083 $= 0.002 + 0.081$\\
+                $\neg T$ & $\neg L$ & 0.747 $= 0.018 + 0.729$\\
+                \hline
+            \end{tabular}
+            \caption{Tableau des probabilités conditionnelles de $P(T, L)$ en additionnant les lignes où $T$ et $L$ ont la même valeur}
+            \label{tab:tl} 
+        \end{table}
+        Il ne reste plus qu'a éliminer $T$. La table \ref{tab:tl} devient, lorsque on élimine $T$:
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|l|l|}
+                \hline
+                $L$ & 0.134 $= 0.051 + 0.083$ \\
+                $\neg L$ & 0.866 $= 0.119 + 0.747$\\
+                \hline
+            \end{tabular}
+            \caption{Tableau des probabilités conditionnelles de $P(L)$ en additionnant les lignes où $L$ a la même valeur}
+            \label{tab:l} 
+        \end{table}
+
+
 
 
 \end{enumerate}
@@ -380,10 +428,31 @@ on normalise le résultat en divisant par la somme des probabilités.
     \caption{Table pour savoir si un triplet est actif ou pas}\label{fig:triplet}
 \end{figure}
 
+Si le chemin est actif, alors les noeuds des extrémités ne sont pas indépendants conditionnellement. 
+Si le chemin est inactif, alors les noeuds des extrémités sont indépendants conditionnellement.
+
+X et Y sont indépendants conditionnellement étant donné Z s'il n'existe aucun chemin actif entre X et Y étant donné Z.
+Il suffit donc d'un seul chemin actif pour que X et Y ne soient pas indépendants conditionnellement.
+Si tous les chemins entre X et Y sont inactifs, alors X et Y sont indépendants conditionnellement.
+
+
 \begin{remark}\leavevmode
     Cette technique est utile pour savoir si deux variables aléatoires sont indépendantes conditionnellement. 
     Il n'est pas toujours facile, lors du design du réseau bayésien, de savoir quelles variables aléatoires sont indépendantes conditionnellement.
 \end{remark}
+
+\begin{definition}{Markov Blanket}{markov-blanket}
+    Le Markov Blanket d'un noeud est l'ensemble de ses parents, enfants et parents de ses enfants.
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[width=0.2\textwidth]{pictures/markovblanckets.png}
+        \end{center}
+        \caption{Markov Blanket}\label{fig:markov-blanket}
+    \end{figure}
+\end{definition}
+
+Chaque variable étant donné sa Markov Blanket est indépendante de toutes les autres variables du réseau bayésien.
+Chaque variable étant donné ses parents est indépendante de tous les autres noeuds \textbf{non-descendants}
 
 % subsection D-Separation (end)
 
@@ -466,7 +535,7 @@ Le problème est que les échantillons ne sont plus tirés de manière aléatoir
 Pour résoudre ce problème, on va \textbf{pondérer} les échantillons avec la probabilité d'observer la variable selon ses parents.
 Plus un échantillon est probable, plus il aura de poids et inversement.
 
-\newpage
+% \newpage
 \begin{itemize}[label=\textbullet]
     \item \textbf{Input}: Les observations $E_i=e_i$. 
     \item weight $\leftarrow$ 1
